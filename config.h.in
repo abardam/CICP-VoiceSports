@@ -1,1 +1,2 @@
-#define _USE_KINECT
+//Uncomment this line to use the Kinect functions
+//#define _USE_KINECT
