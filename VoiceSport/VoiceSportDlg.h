@@ -3,8 +3,13 @@
 //
 
 #pragma once
+#include "afxwin.h"
+#include "asr.h"
+#include "callback.h"
+#include "tts.h"
 
-
+void onFinalResult(std::string text, CWnd* ctx);
+void onError(int, CWnd* ctx);
 // CVoiceSportDlg dialog
 class CVoiceSportDlg : public CDialogEx
 {
@@ -32,4 +37,19 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	// Start ASR
+	CButton btnStartASR;
+	// Stop ASR
+	CButton btnStopASR;
+	// Edit box that store ASR result
+	CEdit ebAsrResult;
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnEnChangeEdit1();
+	void runASR();
+	void stopASR();
+private:
+	// Demo ASR
+	voicesport::SpeechKit speechkit;
+	// End Demo
 };

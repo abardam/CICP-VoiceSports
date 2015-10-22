@@ -58,12 +58,27 @@ CVoiceSportDlg::CVoiceSportDlg(CWnd* pParent /*=NULL*/)
 void CVoiceSportDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_BUTTON1, btnStartASR);
+	DDX_Control(pDX, IDC_BUTTON2, btnStopASR);
+	DDX_Control(pDX, IDC_EDIT1, ebAsrResult);
+
+	btnStartASR.SetWindowTextW(L"Start ASR");
+	btnStopASR.SetWindowTextW(L"Stop ASR");
+	btnStopASR.EnableWindow(false);
+	// Demo ASR
+	speechkit.setCtx(AfxGetMainWnd());
+	speechkit.connectOnFinalResult(makeFunctor((CBFunctor2<std::string, CWnd* > *)0, onFinalResult));
+	speechkit.connectOnError(makeFunctor((CBFunctor2<int, CWnd* > *)0, onError));
+	// End Demo
 }
 
 BEGIN_MESSAGE_MAP(CVoiceSportDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON1, &CVoiceSportDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CVoiceSportDlg::OnBnClickedButton2)
+	ON_EN_CHANGE(IDC_EDIT1, &CVoiceSportDlg::OnEnChangeEdit1)
 END_MESSAGE_MAP()
 
 
@@ -150,4 +165,77 @@ void CVoiceSportDlg::OnPaint()
 HCURSOR CVoiceSportDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+
+void CVoiceSportDlg::OnBnClickedButton1()
+{
+	// TODO: Add your control notification handler code here
+	runASR();
+}
+
+
+void CVoiceSportDlg::OnBnClickedButton2()
+{
+	// TODO: Add your control notification handler code here
+	stopASR();
+}
+
+
+void CVoiceSportDlg::OnEnChangeEdit1()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+}
+
+
+void CVoiceSportDlg::runASR()
+{
+	if (!speechkit.startASR()) {
+		MessageBox(_T("ASR service is not available."), _T("Error"),
+			MB_ICONERROR | MB_OK);
+	}
+	else {
+		btnStopASR.EnableWindow(true);
+		btnStartASR.EnableWindow(false);
+	}
+	
+}
+void CVoiceSportDlg::stopASR()
+{
+	speechkit.stopASR();
+	btnStartASR.EnableWindow(true);
+	btnStopASR.EnableWindow(false);
+}
+
+
+std::wstring s2ws(const std::string& s)
+{
+	int len;
+	int slength = (int)s.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+	wchar_t* buf = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+	std::wstring r(buf);
+	delete[] buf;
+	return r;
+}
+
+void onFinalResult(std::string text, CWnd* ctx)
+{
+	CVoiceSportDlg *dialogctx = (CVoiceSportDlg *)ctx;
+	std::wstring stemp = s2ws(text);
+	//CMFCApplication2Dlg *pMainDlg = (CMFCApplication2Dlg *)AfxGetMainWnd();
+	//EbASR2 = stemp.c_str();
+	dialogctx->ebAsrResult.SetWindowTextW(stemp.c_str());
+	tts(stemp.c_str());
+	//EbASR2(_T(stemp.c_str()));
+}
+
+void onError(int, CWnd* ctx)
+{
 }

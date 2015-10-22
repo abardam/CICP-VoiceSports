@@ -33,6 +33,15 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Documents\Visual Studio 2015\Projects\MFCApplication3\MFCApplication3\asr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Documents\Visual Studio 2015\Projects\MFCApplication3\MFCApplication3\callback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Documents\Visual Studio 2015\Projects\MFCApplication3\MFCApplication3\tts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VoiceSport.cpp">
@@ -42,6 +51,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Documents\Visual Studio 2015\Projects\MFCApplication3\MFCApplication3\asr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Documents\Visual Studio 2015\Projects\MFCApplication3\MFCApplication3\tts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
