@@ -19,19 +19,19 @@ inline void SafeRelease(Interface *& pInterfaceToRelease)
 #define CAPTURE_SIZE_X_DEPTH 512
 #define CAPTURE_SIZE_Y_DEPTH 424
 
-enum Update{
-	Color			= 0x01,
-	Depth			= 0x02,
-	Body			= 0x04,
-	BodyIndex		= 0x08,
-	DepthRGBX		= 0x10,
-	MapDepthToColor	= 0x20,
-	MapColorToDepth	= 0x40,
+enum Update {
+	Color = 0x01,
+	Depth = 0x02,
+	Body = 0x04,
+	BodyIndex = 0x08,
+	DepthRGBX = 0x10,
+	MapDepthToColor = 0x20,
+	MapColorToDepth = 0x40,
 };
 
 int countUpdate(unsigned int options);
 
-class Kinect2Manager{
+class Kinect2Manager {
 
 public:
 	Kinect2Manager();
@@ -72,7 +72,10 @@ public:
 	//void mapDepthToSkeleton(float * nDepthX, float * nDepthY, long * nDepth,
 	//	float * nCameraX, float * nCameraY, float * nCameraZ);
 
-	int * m_pBodyIndex;
+	unsigned char * m_pBodyIndex;
+
+	void DumpBuffers();
+	void LoadBuffers();
 
 private:
 
@@ -156,4 +159,6 @@ private:
 
 	int m_nHandLeftConfidence;
 	int m_nHandRightConfidence;
+
+	bool m_bBuffersLoaded;
 };
