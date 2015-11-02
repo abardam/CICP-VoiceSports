@@ -1,10 +1,13 @@
-# CICP-VoiceSports
+# VoiceSports
 
-The main solution file is in CICP-VoiceSports/
+The main solution file is in VoiceSports/
 
 # config.h
 
-Modify config.h.in to create config.h
+Modify config.h.in to create config.h.
+
+*Current settings:*
+* _USE_KINECT: define this in order to make use of Kinect functions.
 
 # KinectRead
 This project contains methods for reading input from the Kinect v2. In order to use this, you need the [Kinect v2 SDK](http://www.microsoft.com/en-us/download/details.aspx?id=44561). You may be unable to install it if you are on Windows 7 or lower. I will provide a workaround with dummy functions.
