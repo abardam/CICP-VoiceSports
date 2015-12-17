@@ -38,4 +38,5 @@ public:
 
 private:
 	CStatic * m_picture;
+	int m_width, m_height;
 };
