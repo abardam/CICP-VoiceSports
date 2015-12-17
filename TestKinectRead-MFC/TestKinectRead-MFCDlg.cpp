@@ -58,6 +58,8 @@ CTestKinectReadMFCDlg::CTestKinectReadMFCDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(IDD_TESTKINECTREADMFC_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_width = 0;
+	m_height = 0;
 }
 
 void CTestKinectReadMFCDlg::DoDataExchange(CDataExchange* pDX)
@@ -183,8 +185,7 @@ HBITMAP get_kinect_color(int * w = 0, int * h = 0);
 
 void CTestKinectReadMFCDlg::ShowKinect()
 {
-	int width, height;
-	HBITMAP hBmp = get_kinect_color(&width, &height);
+	HBITMAP hBmp = get_kinect_color(&m_width, &m_height);
 
 	//HBITMAP hBmp = (HBITMAP)LoadImage(NULL, L"Chrysanthemum.bmp", IMAGE_BITMAP, 1024, 768, LR_LOADFROMFILE);
 	
@@ -196,7 +197,7 @@ void CTestKinectReadMFCDlg::ShowKinect()
 		}
 	}
 
-	SetWindowPos(NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
+	SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
 }
 
 
@@ -208,15 +209,17 @@ HBITMAP get_kinect_color(int * w, int * h) {
 	Kinect2Manager k2m;
 	k2m.InitializeDefaultSensor();
 
-	k2m.Update(Update::Color);
+	Sleep(10);
+
+	k2m.Update(Update::Color | Update::Depth);
 
 	RGBQUAD * rgbx = k2m.GetColorRGBX();
 
 	int width = k2m.getColorWidth();
 	int height = k2m.getColorHeight();
 
-	if (w != NULL) *w = width;
-	if (h != NULL) *h = height;
+	if (w != NULL && width > 0) *w = width;
+	if (h != NULL && height > 0) *h = height;
 
 	if (width != 0 && height != 0) {
 
