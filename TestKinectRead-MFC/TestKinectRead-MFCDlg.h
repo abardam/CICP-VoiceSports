@@ -33,6 +33,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
+	//KINECT: function to update/show kinect
 	void ShowKinect();
 
 private:
