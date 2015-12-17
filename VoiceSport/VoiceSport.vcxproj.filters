@@ -53,10 +53,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\Visual Studio 2015\Projects\MFCApplication3\MFCApplication3\asr.cpp">
+    <ClCompile Include="asr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\Visual Studio 2015\Projects\MFCApplication3\MFCApplication3\tts.cpp">
+    <ClCompile Include="tts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "asr.h"
+#include <WS2tcpip.h>
+
 void voicesport::SpeechKit::Speechkit()
 {
 
@@ -20,7 +22,8 @@ bool voicesport::SpeechKit::connectServer()
 	SOCKADDR_IN target;
 	target.sin_family = AF_INET;
 	target.sin_port = htons(server_port);
-	target.sin_addr.s_addr = inet_addr(server_host.c_str());
+	target.sin_addr.s_addr = inet_addr(server_host.c_str()); //<-- deprecated
+	//inet_pton(AF_INET, server_host.c_str(), &target.sin_addr.s_addr);
 
 	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
