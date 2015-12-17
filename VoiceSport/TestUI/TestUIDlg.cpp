@@ -1,4 +1,4 @@
-
+﻿
 // TestUIDlg.cpp : implementation file
 //
 
@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CTestUIDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+//	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -173,21 +174,27 @@ UINT KinectRefreshProc(LPVOID pParam) {
 		return 1;   // if pObject is not valid
 
 					//thread loop
+
+	pObject->InitKinect();
 	while (true) {
 		pObject->ShowKinect();
+		Sleep(10);
 	}
 
 	return 0;
 }
 
-HBITMAP get_kinect_color(int * w = 0, int * h = 0);
+void CTestUIDlg::InitKinect() {
+	m_kinectManager.InitializeDefaultSensor();
+}
+
+HBITMAP get_kinect_color(Kinect2Manager& kinect_manager, int * w = 0, int * h = 0);
 
 // KINECT: this is what is called repeatedly in the thread in order to update the picture box
 
 void CTestUIDlg::ShowKinect()
 {
-	int width, height;
-	HBITMAP hBmp = get_kinect_color(&width, &height);
+	HBITMAP hBmp = get_kinect_color(m_kinectManager, &m_width, &m_height);
 
 	//HBITMAP hBmp = (HBITMAP)LoadImage(NULL, L"Chrysanthemum.bmp", IMAGE_BITMAP, 1024, 768, LR_LOADFROMFILE);
 
@@ -196,30 +203,34 @@ void CTestUIDlg::ShowKinect()
 
 		if (hBmp_old) {
 			DeleteObject(hBmp_old);
+			//RedrawWindow();
 		}
+		else {
+			printf("WTF?\n");
+		}
+		SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
+	}
+	else {
+		printf("WTF?\n");
 	}
 
-	SetWindowPos(NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
 }
 
 
 // KINECT: function to return the Kinect input as HBITMAP.
 
 unsigned char pixels[CAPTURE_SIZE_X_COLOR * CAPTURE_SIZE_Y_COLOR * 3];
-HBITMAP get_kinect_color(int * w, int * h) {
+HBITMAP get_kinect_color(Kinect2Manager& kinect_manager, int * w, int * h) {
 
-	Kinect2Manager k2m;
-	k2m.InitializeDefaultSensor();
+	kinect_manager.Update(Update::Color | Update::Depth);
 
-	k2m.Update(Update::Color);
+	RGBQUAD * rgbx = kinect_manager.GetColorRGBX();
 
-	RGBQUAD * rgbx = k2m.GetColorRGBX();
+	int width = kinect_manager.getColorWidth();
+	int height = kinect_manager.getColorHeight();
 
-	int width = k2m.getColorWidth();
-	int height = k2m.getColorHeight();
-
-	if (w != NULL) *w = width;
-	if (h != NULL) *h = height;
+	if (w != NULL && width > 0) *w = width;
+	if (h != NULL && height > 0) *h = height;
 
 	if (width != 0 && height != 0) {
 
@@ -267,3 +278,10 @@ HBITMAP get_kinect_color(int * w, int * h) {
 
 	return 0;
 }
+
+//BOOL CTestUIDlg::OnEraseBkgnd(CDC* pDC)
+//{
+//	// TODO: ここにメッセージ ハンドラー コードを追加するか、既定の処理を呼び出します。
+//
+//	return CDialogEx::OnEraseBkgnd(pDC);
+//}

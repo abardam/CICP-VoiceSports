@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "../../KinectRead/Kinect2Manager.h"
+
 
 // CTestUIDlg dialog
 class CTestUIDlg : public CDialogEx
@@ -34,7 +36,15 @@ protected:
 
 public:
 	void ShowKinect();
+	void InitKinect();
 
 private:
 	CStatic * m_maindisplay;
+	int m_width, m_height;
+
+	Kinect2Manager m_kinectManager;
+
+public:
+//	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+
 };
