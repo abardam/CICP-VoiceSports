@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VoiceSport", "VoiceSport.vcxproj", "{5AA342B0-0282-4C0F-B5F2-C4FB4C52B212}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestKinectRead-MFC", "..\TestKinectRead-MFC\TestKinectRead-MFC.vcxproj", "{51A38AB8-95E3-4582-915C-C5A78230A182}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestUI", "TestUI\TestUI.vcxproj", "{7F2379AD-BB29-4CC0-9C2F-10432062DC17}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CICP-ActionTemplates", "..\CICP-ActionTemplates\CICP-ActionTemplates.vcxproj", "{4D0D1812-8059-4816-B55D-3B7AC028CAF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,14 @@ Global
 		{7F2379AD-BB29-4CC0-9C2F-10432062DC17}.Release|x64.Build.0 = Release|x64
 		{7F2379AD-BB29-4CC0-9C2F-10432062DC17}.Release|x86.ActiveCfg = Release|Win32
 		{7F2379AD-BB29-4CC0-9C2F-10432062DC17}.Release|x86.Build.0 = Release|Win32
+		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Debug|x64.ActiveCfg = Debug|x64
+		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Debug|x64.Build.0 = Debug|x64
+		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Debug|x86.ActiveCfg = Debug|Win32
+		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Debug|x86.Build.0 = Debug|Win32
+		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Release|x64.ActiveCfg = Release|x64
+		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Release|x64.Build.0 = Release|x64
+		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Release|x86.ActiveCfg = Release|Win32
+		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
