@@ -30,7 +30,7 @@ int main(int argc, char *argv)
 	}
 	std::cout << std::endl;
 
-	system("\"\"C:\\Program Files\\MPC-HC\\mpc-hc64.exe\" \"D:\\PV_2015_yokoyalab_3.mp4\"\"");
+	//system("\"\"C:\\Program Files\\MPC-HC\\mpc-hc64.exe\" \"D:\\PV_2015_yokoyalab_3.mp4\"\"");
 
 	getchar();
 

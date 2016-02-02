@@ -2,7 +2,7 @@
 #include <vector>
 #include <array>
 
-#define HAR_PATH "D:\\Notes\\IPGP\\CICP2015\\Database\\"
+#define HAR_PATH "..\\Database\\"
 
 #define NUM_JOINTS 15	// Number of joints in the skeleton model
 
