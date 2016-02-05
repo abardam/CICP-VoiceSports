@@ -2,7 +2,7 @@
 #include <vector>
 #include <array>
 
-#define HAR_PATH "..\\Database\\"
+#define HAR_PATH "D:\\Notes\\IPGP\\CICP2015\\Database\\"
 
 #define NUM_JOINTS 15	// Number of joints in the skeleton model
 
@@ -24,7 +24,7 @@
 #define RFOOT 14
 
 struct fbskeleton {
-	bool feedback[NUM_JOINTS];
+	bool needsCheck[NUM_JOINTS];
 };
 
 struct position {

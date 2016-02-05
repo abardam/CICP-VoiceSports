@@ -15,17 +15,28 @@ int main(int argc, char *argv)
 		inskel.positions[j].fwdbwd = 0;
 		inskel.confidences[j] = 1;
 
-		fbjoints.feedback[j] = true;
+		fbjoints.needsCheck[j] = true;
 	}
 	action = 1;
 
-	posskeleton feedback = matcher.weightedPoseMatching(inskel, fbjoints, action);
+	posskeleton feedback, fitpose;
+	
+	matcher.weightedPoseMatching(inskel, fbjoints, action, &feedback, &fitpose);
 
 	for (int j = 0; j < NUM_JOINTS; ++j)
 	{
 		std::cout << feedback.positions[j].rightleft << ' ';
 		std::cout << feedback.positions[j].updown << ' ';
 		std::cout << feedback.positions[j].fwdbwd << ' ';
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+
+	for (int j = 0; j < NUM_JOINTS; ++j)
+	{
+		std::cout << fitpose.positions[j].rightleft << ' ';
+		std::cout << fitpose.positions[j].updown << ' ';
+		std::cout << fitpose.positions[j].fwdbwd << ' ';
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;

@@ -8,7 +8,7 @@ class PoseMatcher
 public:
 	PoseMatcher();
 	~PoseMatcher();
-	posskeleton weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action);
+	void weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action, posskeleton* feedback, posskeleton* fitpose);
 
 private:
 	void normalizeSkeleton(posskeleton* skel);

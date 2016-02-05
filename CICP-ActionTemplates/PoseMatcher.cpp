@@ -145,29 +145,28 @@ int PoseMatcher::fitSkeleton(posskeleton inskel, int action)
 	return user;
 }
 
-posskeleton PoseMatcher::weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action)
+void PoseMatcher::weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action, posskeleton* feedback, posskeleton* fitpose)
 {
 	// USER + ACTION + FRONTAL = COMPARABLE SKELETON
 	int user = fitSkeleton(inskel, action);
 	posskeleton compskel = posedataset[action][user];
 
-	posskeleton outskel;	// Skeleton resulting of the feedback
-
+	// Calculate the feedback for each joint
 	for (unsigned int j = 0; j < NUM_JOINTS; j++)
 	{
-		if (fbjoints.feedback[j])
+		if (fbjoints.needsCheck[j])
 		{
-			outskel.positions[j].rightleft = inskel.positions[j].rightleft - compskel.positions[j].rightleft;
-			outskel.positions[j].updown = inskel.positions[j].updown - compskel.positions[j].updown;
-			outskel.positions[j].fwdbwd = inskel.positions[j].fwdbwd - compskel.positions[j].fwdbwd;
+			feedback->positions[j].rightleft = inskel.positions[j].rightleft - compskel.positions[j].rightleft;
+			feedback->positions[j].updown = inskel.positions[j].updown - compskel.positions[j].updown;
+			feedback->positions[j].fwdbwd = inskel.positions[j].fwdbwd - compskel.positions[j].fwdbwd;
 		}
 		else
 		{
-			outskel.positions[j].rightleft = 0;
-			outskel.positions[j].updown = 0;
-			outskel.positions[j].fwdbwd = 0;
+			feedback->positions[j].rightleft = 0;
+			feedback->positions[j].updown = 0;
+			feedback->positions[j].fwdbwd = 0;
 		}
 	}
 
-	return outskel;
+	*fitpose = compskel;
 }
