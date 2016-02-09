@@ -224,11 +224,17 @@ void CTestUIDlg::ShowKinect()
 
 	//HBITMAP hBmp = rgbquad_to_hbitmap(rgbx, m_width, m_height);
 
-	int width = 400, height = 300;
+	int width = 960, height = 540;
 
 	std::vector<RGBQUAD> rgbx_resized(width * height);
 
 	resize_rgbquad(rgbx, m_width, m_height, rgbx_resized.data(), width, height);
+
+	//RGBQUAD col;
+	//col.rgbRed = 200;
+	//col.rgbGreen = 10;
+	//col.rgbBlue = 10;
+	//draw_circle(rgbx_resized.data(), width, height, 10, 10, 5, col);
 
 	m_width = width;
 	m_height = height;
@@ -240,6 +246,7 @@ void CTestUIDlg::ShowKinect()
 
 	if (hBmp) {
 		HBITMAP hBmp_old = m_maindisplay->SetBitmap(hBmp);
+		m_maindisplay->SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
 
 		if (hBmp_old) {
 			DeleteObject(hBmp_old);

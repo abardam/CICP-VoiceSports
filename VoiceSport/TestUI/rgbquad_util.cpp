@@ -92,3 +92,34 @@ void resize_rgbquad(RGBQUAD * in, int in_w, int in_h, RGBQUAD * out, int out_w, 
 		}
 	}
 }
+
+void draw_pixel(RGBQUAD * in, int in_w, int in_h, int pt_x, int pt_y, RGBQUAD color) {
+	if (pt_x >= 0 && pt_x < in_w && pt_y >= 0 && pt_y < in_h) {
+		in[pt_y * in_w + pt_x] = color;
+	}
+}
+
+void draw_circle(RGBQUAD * in, int in_w, int in_h, int c_x, int c_y, int c_r, RGBQUAD color) {
+	int x = c_r;
+	int y = 0;
+	int dec_over_2 = 1 - x;
+
+	while (y <= x) {
+		draw_pixel(in, in_w, in_h,  x + c_x,  y + c_y, color);
+		draw_pixel(in, in_w, in_h,  y + c_x,  x + c_y, color);
+		draw_pixel(in, in_w, in_h, -x + c_x,  y + c_y, color);
+		draw_pixel(in, in_w, in_h, -y + c_x,  x + c_y, color);
+		draw_pixel(in, in_w, in_h, -x + c_x, -y + c_y, color);
+		draw_pixel(in, in_w, in_h, -y + c_x, -x + c_y, color);
+		draw_pixel(in, in_w, in_h,  x + c_x, -y + c_y, color);
+		draw_pixel(in, in_w, in_h,  y + c_x, -x + c_y, color);
+		++y;
+		if (dec_over_2 <= 0) {
+			dec_over_2 += 2 * y + 1;
+		}
+		else {
+			--x;
+			dec_over_2 += 2 * (y - x) + 1;
+		}
+	}
+}
