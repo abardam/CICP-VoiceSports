@@ -70,6 +70,7 @@ BEGIN_MESSAGE_MAP(CTestUIDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 //	ON_WM_ERASEBKGND()
+ON_CBN_SELCHANGE(IDC_COMBO1, &CTestUIDlg::OnCbnSelchangeCombo1)
 END_MESSAGE_MAP()
 
 
@@ -108,9 +109,29 @@ BOOL CTestUIDlg::OnInitDialog()
 
 	// KINECT: set picture control variable so we can change the picture
 	m_maindisplay = (CStatic*)GetDlgItem(IDC_MAINDISPLAY); // this is the ID that we set in the dialog view
-
+	m_sport_cb = (CComboBox*)GetDlgItem(IDC_COMBO1);
+	m_action_cb = (CComboBox*)GetDlgItem(IDC_COMBO2);
 														  // KINECT: begin the thread
 	AfxBeginThread(KinectRefreshProc, this);
+
+	// init sports
+	Sport kendo_sp;
+	kendo_sp.name = "Kendo";
+	kendo_sp.actions.push_back("Kamae");
+
+	Sport tennis_sp;
+	tennis_sp.name = "Tennis";
+	tennis_sp.actions.push_back("Forehand");
+
+	m_sports.push_back(kendo_sp);
+	m_sports.push_back(tennis_sp);
+
+	m_sport_cb->ResetContent();
+	for (Sport s : m_sports) {
+		std::wstring s2;
+		s2.assign(s.name.begin(), s.name.end());
+		m_sport_cb->AddString(s2.c_str());
+	}
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -188,13 +209,30 @@ void CTestUIDlg::InitKinect() {
 	m_kinectManager.InitializeDefaultSensor();
 }
 
-HBITMAP get_kinect_color(Kinect2Manager& kinect_manager, int * w = 0, int * h = 0);
-
 // KINECT: this is what is called repeatedly in the thread in order to update the picture box
 
 void CTestUIDlg::ShowKinect()
 {
-	HBITMAP hBmp = get_kinect_color(m_kinectManager, &m_width, &m_height);
+	m_kinectManager.Update(Update::Color | Update::Depth);
+
+	RGBQUAD * rgbx = m_kinectManager.GetColorRGBX();
+
+	m_width = m_kinectManager.getColorWidth();
+	m_height = m_kinectManager.getColorHeight();
+
+	//HBITMAP hBmp = rgbquad_to_hbitmap(rgbx, m_width, m_height);
+
+	int width = 400, height = 300;
+
+	std::vector<RGBQUAD> rgbx_resized(width * height);
+
+	resize_rgbquad(rgbx, m_width, m_height, rgbx_resized.data(), width, height);
+
+	m_width = width;
+	m_height = height;
+
+	HBITMAP hBmp = rgbquad_to_hbitmap(rgbx_resized.data(), m_width, m_height);
+
 
 	//HBITMAP hBmp = (HBITMAP)LoadImage(NULL, L"Chrysanthemum.bmp", IMAGE_BITMAP, 1024, 768, LR_LOADFROMFILE);
 
@@ -208,7 +246,7 @@ void CTestUIDlg::ShowKinect()
 		else {
 			printf("WTF?\n");
 		}
-		SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
+		//SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
 	}
 	else {
 		printf("WTF?\n");
@@ -217,67 +255,6 @@ void CTestUIDlg::ShowKinect()
 }
 
 
-// KINECT: function to return the Kinect input as HBITMAP.
-
-unsigned char pixels[CAPTURE_SIZE_X_COLOR * CAPTURE_SIZE_Y_COLOR * 3];
-HBITMAP get_kinect_color(Kinect2Manager& kinect_manager, int * w, int * h) {
-
-	kinect_manager.Update(Update::Color | Update::Depth);
-
-	RGBQUAD * rgbx = kinect_manager.GetColorRGBX();
-
-	int width = kinect_manager.getColorWidth();
-	int height = kinect_manager.getColorHeight();
-
-	if (w != NULL && width > 0) *w = width;
-	if (h != NULL && height > 0) *h = height;
-
-	if (width != 0 && height != 0) {
-
-		for (int x = 0; x < width && x < CAPTURE_SIZE_X_COLOR; ++x) {
-			for (int y = 0; y < height && y < CAPTURE_SIZE_Y_COLOR; ++y) {
-				pixels[(y * CAPTURE_SIZE_X_COLOR + x) * 3 + 0] = (rgbx + (y * width + x))->rgbBlue;
-				pixels[(y * CAPTURE_SIZE_X_COLOR + x) * 3 + 1] = (rgbx + (y * width + x))->rgbGreen;
-				pixels[(y * CAPTURE_SIZE_X_COLOR + x) * 3 + 2] = (rgbx + (y * width + x))->rgbRed;
-			}
-		}
-
-		BITMAPINFOHEADER bmih;
-		bmih.biSize = sizeof(BITMAPINFOHEADER);
-		bmih.biWidth = CAPTURE_SIZE_X_COLOR;
-		bmih.biHeight = -CAPTURE_SIZE_Y_COLOR;
-		bmih.biPlanes = 1;
-		bmih.biBitCount = 24;
-		bmih.biCompression = BI_RGB;
-		bmih.biSizeImage = 0;
-		bmih.biXPelsPerMeter = 10;
-		bmih.biYPelsPerMeter = 10;
-		bmih.biClrUsed = 0;
-		bmih.biClrImportant = 0;
-
-		BITMAPINFO dbmi;
-		ZeroMemory(&dbmi, sizeof(dbmi));
-		dbmi.bmiHeader = bmih;
-		dbmi.bmiColors->rgbBlue = 0;
-		dbmi.bmiColors->rgbGreen = 0;
-		dbmi.bmiColors->rgbRed = 0;
-		dbmi.bmiColors->rgbReserved = 0;
-		void* bits = (void*)&(pixels[0]);
-
-		// Create DIB
-		HBITMAP hBmp = CreateDIBSection(0, &dbmi, DIB_RGB_COLORS, &bits, NULL, 0);
-		if (hBmp == NULL) {
-			::MessageBox(NULL, __T("Could not load the desired image image"), __T("Error"), MB_OK);
-			return 0;
-		}
-		// copy pixels into DIB.
-		memcpy(bits, pixels, sizeof(pixels));
-
-		return hBmp;
-	}
-
-	return 0;
-}
 
 //BOOL CTestUIDlg::OnEraseBkgnd(CDC* pDC)
 //{
@@ -285,3 +262,17 @@ HBITMAP get_kinect_color(Kinect2Manager& kinect_manager, int * w, int * h) {
 //
 //	return CDialogEx::OnEraseBkgnd(pDC);
 //}
+
+
+void CTestUIDlg::OnCbnSelchangeCombo1()
+{
+	m_current_sport = m_sport_cb->GetCurSel();
+
+	m_action_cb->ResetContent();
+	for (std::string s : m_sports[m_current_sport].actions) {
+		std::wstring s2;
+		s2.assign(s.begin(), s.end());
+		m_action_cb->AddString(s2.c_str());
+
+	}
+}

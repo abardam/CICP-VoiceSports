@@ -5,7 +5,12 @@
 #pragma once
 
 #include "../../KinectRead/Kinect2Manager.h"
+#include <vector>
 
+struct Sport {
+	std::string name;
+	std::vector<std::string> actions;
+};
 
 // CTestUIDlg dialog
 class CTestUIDlg : public CDialogEx
@@ -40,11 +45,17 @@ public:
 
 private:
 	CStatic * m_maindisplay;
+	CComboBox * m_sport_cb;
+	CComboBox * m_action_cb;
 	int m_width, m_height;
+
+	std::vector<Sport> m_sports;
+	int m_current_sport;
 
 	Kinect2Manager m_kinectManager;
 
 public:
 //	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 
+	afx_msg void OnCbnSelchangeCombo1();
 };
