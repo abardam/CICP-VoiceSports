@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "rgbquad_util.h"
 #include "..\..\KinectRead\Kinect2Manager.h"
 

@@ -11,6 +11,8 @@
 #define new DEBUG_NEW
 #endif
 
+#include "rgbquad_util.h"
+
 // KINECT: include KinectRead project
 #include "..\..\KinectRead\Kinect2Manager.h"
 
