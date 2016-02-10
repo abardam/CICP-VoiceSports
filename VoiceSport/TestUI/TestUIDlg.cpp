@@ -236,6 +236,38 @@ void CTestUIDlg::ShowKinect()
 	//col.rgbBlue = 10;
 	//draw_circle(rgbx_resized.data(), width, height, 10, 10, 5, col);
 
+	//show skeleton (need coordinate mapper)
+	ICoordinateMapper * cm = m_kinectManager.getCoordinateMapper();
+	if (cm) {
+		if (m_kinectManager.getSkeletonIsGood()) {
+			std::vector<Joint> joints;
+			Joint * jptr = joints.data();
+			jptr = m_kinectManager.GetJoints();
+
+			std::vector<CameraSpacePoint> jcam(JointType_Count);
+			for (int j = 0; j < JointType_Count; ++j)
+			{
+				jcam[j] = joints[j].Position;
+			}
+			std::vector<ColorSpacePoint> jcol(JointType_Count);
+
+			cm->MapCameraPointsToColorSpace(JointType_Count, jcam.data(), JointType_Count, jcol.data());
+
+			RGBQUAD col;
+			col.rgbRed = 200;
+			col.rgbGreen = 10;
+			col.rgbBlue = 10;
+			float x_ratio = (width + 0.0) / m_width;
+			float y_ratio = (height + 0.0) / m_height;
+			for (int j = 0; j < JointType_Count; ++j) {
+				int x = jcol[j].X * x_ratio;
+				int y = jcol[j].Y * y_ratio;
+				draw_circle(rgbx_resized.data(), width, height, x, y, 5, col);
+			}
+		}
+	}
+
+
 	m_width = width;
 	m_height = height;
 
