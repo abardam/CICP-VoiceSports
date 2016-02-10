@@ -240,14 +240,12 @@ void CTestUIDlg::ShowKinect()
 	ICoordinateMapper * cm = m_kinectManager.getCoordinateMapper();
 	if (cm) {
 		if (m_kinectManager.getSkeletonIsGood()) {
-			std::vector<Joint> joints(JointType_Count);
-			Joint * jptr = joints.data();
-			*jptr = *(m_kinectManager.GetJoints());
+			Joint * jptr = m_kinectManager.GetJoints();
 
 			std::vector<CameraSpacePoint> jcam(JointType_Count);
 			for (int j = 0; j < JointType_Count; ++j)
 			{
-				jcam[j] = joints[j].Position;
+				jcam[j] = jptr[j].Position;
 			}
 			std::vector<ColorSpacePoint> jcol(JointType_Count);
 
