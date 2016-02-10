@@ -215,7 +215,7 @@ void CTestUIDlg::InitKinect() {
 
 void CTestUIDlg::ShowKinect()
 {
-	m_kinectManager.Update(Update::Color | Update::Depth);
+	m_kinectManager.Update(Update::Color | Update::Depth | Update::Body | Update::BodyIndex);
 
 	RGBQUAD * rgbx = m_kinectManager.GetColorRGBX();
 
@@ -240,9 +240,9 @@ void CTestUIDlg::ShowKinect()
 	ICoordinateMapper * cm = m_kinectManager.getCoordinateMapper();
 	if (cm) {
 		if (m_kinectManager.getSkeletonIsGood()) {
-			std::vector<Joint> joints;
+			std::vector<Joint> joints(JointType_Count);
 			Joint * jptr = joints.data();
-			jptr = m_kinectManager.GetJoints();
+			*jptr = *(m_kinectManager.GetJoints());
 
 			std::vector<CameraSpacePoint> jcam(JointType_Count);
 			for (int j = 0; j < JointType_Count; ++j)
