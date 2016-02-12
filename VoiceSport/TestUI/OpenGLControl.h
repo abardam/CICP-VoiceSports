@@ -3,6 +3,8 @@
 #include <gl\GL.h>
 #include <gl\GLU.h>
 
+#include "..\..\KinectRead\Kinect2Manager.h"
+
 class COpenGLControl :
 	public CWnd
 {
@@ -11,6 +13,8 @@ public:
 	virtual ~COpenGLControl();
 
 	void oglCreate(CRect rect, CWnd *parent);
+	void oglSetTexture(RGBQUAD * img, int width, int height);
+	void oglSetKinect(Kinect2Manager * kinect_manager);
 
 	UINT_PTR m_unpTimer;
 
@@ -31,6 +35,14 @@ private:
 	float m_fLastX;
 	float m_fLastY;
 
+	int m_kinectOrigWidth;
+	int m_kinectOrigHeight;
+	int m_kinectNewWidth;
+	int m_kinectNewHeight;
+
+	GLuint m_texture;
+	Kinect2Manager * m_kinectManager;
+
 	void oglInitialize();
 	void oglDrawScene();
 public:
@@ -43,3 +55,4 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };
 
+GLuint oglInitTexture(RGBQUAD * img, int width, int height);

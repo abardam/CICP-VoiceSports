@@ -113,16 +113,29 @@ BOOL CTestUIDlg::OnInitDialog()
 	//m_maindisplay = (CStatic*)GetDlgItem(IDC_MAINDISPLAY); // this is the ID that we set in the dialog view
 	m_sport_cb = (CComboBox*)GetDlgItem(IDC_COMBO1);
 	m_action_cb = (CComboBox*)GetDlgItem(IDC_COMBO2);
-														  
-	// KINECT: begin the thread
-	//AfxBeginThread(KinectRefreshProc, this);
+													
 
 	//new style with OpenGL
 	CRect rect;
 	GetDlgItem(IDC_MAINDISPLAY)->GetWindowRect(rect);
 	ScreenToClient(rect);
 	m_oglWindow.oglCreate(rect, this);
-	m_oglWindow.m_unpTimer = m_oglWindow.SetTimer(1, 1, 0);
+	m_oglWindow.m_unpTimer = m_oglWindow.SetTimer(1, 33, 0);
+
+
+	std::vector<RGBQUAD> img(256 * 256);
+	for (int i = 0; i < 256 * 256; ++i) {
+		img[i].rgbBlue = 0xff;
+		img[i].rgbGreen = 0;
+		img[i].rgbRed = 0;
+		img[i].rgbReserved = 0xff;
+	}
+
+	m_oglWindow.oglSetTexture(img.data(), 256, 256);
+
+	// KINECT: begin the thread
+	//AfxBeginThread(KinectRefreshProc, this); // note: multithreading does not play well with ogl
+	m_oglWindow.oglSetKinect(&m_kinectManager);
 
 	// init sports
 	Sport kendo_sp;
@@ -226,78 +239,90 @@ void CTestUIDlg::ShowKinect()
 	m_kinectManager.Update(Update::Color | Update::Depth | Update::Body | Update::BodyIndex);
 
 	RGBQUAD * rgbx = m_kinectManager.GetColorRGBX();
-
+/*
 	m_width = m_kinectManager.getColorWidth();
 	m_height = m_kinectManager.getColorHeight();
 
-	//HBITMAP hBmp = rgbquad_to_hbitmap(rgbx, m_width, m_height);
+	m_oglWindow.oglSetTexture(rgbx, m_width, m_height);*/
 
-	int width = 960, height = 540;
-
-	std::vector<RGBQUAD> rgbx_resized(width * height);
-
-	resize_rgbquad(rgbx, m_width, m_height, rgbx_resized.data(), width, height);
-
-	//RGBQUAD col;
-	//col.rgbRed = 200;
-	//col.rgbGreen = 10;
-	//col.rgbBlue = 10;
-	//draw_circle(rgbx_resized.data(), width, height, 10, 10, 5, col);
-
-	//show skeleton (need coordinate mapper)
-	ICoordinateMapper * cm = m_kinectManager.getCoordinateMapper();
-	if (cm) {
-		if (m_kinectManager.getSkeletonIsGood()) {
-			Joint * jptr = m_kinectManager.GetJoints();
-
-			std::vector<CameraSpacePoint> jcam(JointType_Count);
-			for (int j = 0; j < JointType_Count; ++j)
-			{
-				jcam[j] = jptr[j].Position;
-			}
-			std::vector<ColorSpacePoint> jcol(JointType_Count);
-
-			cm->MapCameraPointsToColorSpace(JointType_Count, jcam.data(), JointType_Count, jcol.data());
-
-			RGBQUAD col;
-			col.rgbRed = 200;
-			col.rgbGreen = 10;
-			col.rgbBlue = 10;
-			float x_ratio = (width + 0.0) / m_width;
-			float y_ratio = (height + 0.0) / m_height;
-			for (int j = 0; j < JointType_Count; ++j) {
-				int x = jcol[j].X * x_ratio;
-				int y = jcol[j].Y * y_ratio;
-				draw_circle(rgbx_resized.data(), width, height, x, y, 5, col);
-			}
-		}
+	std::vector<RGBQUAD> img(256 * 256);
+	for (int i = 0; i < 256 * 256; ++i) {
+		img[i].rgbBlue = 0xff;
+		img[i].rgbGreen = 0;
+		img[i].rgbRed = 0;
+		img[i].rgbReserved = 0xff;
 	}
 
+	m_oglWindow.oglSetTexture(img.data(), 256, 256);
 
-	m_width = width;
-	m_height = height;
+	////HBITMAP hBmp = rgbquad_to_hbitmap(rgbx, m_width, m_height);
 
-	HBITMAP hBmp = rgbquad_to_hbitmap(rgbx_resized.data(), m_width, m_height);
+	//int width = 960, height = 540;
+
+	//std::vector<RGBQUAD> rgbx_resized(width * height);
+
+	//resize_rgbquad(rgbx, m_width, m_height, rgbx_resized.data(), width, height);
+
+	////RGBQUAD col;
+	////col.rgbRed = 200;
+	////col.rgbGreen = 10;
+	////col.rgbBlue = 10;
+	////draw_circle(rgbx_resized.data(), width, height, 10, 10, 5, col);
+
+	////show skeleton (need coordinate mapper)
+	//ICoordinateMapper * cm = m_kinectManager.getCoordinateMapper();
+	//if (cm) {
+	//	if (m_kinectManager.getSkeletonIsGood()) {
+	//		Joint * jptr = m_kinectManager.GetJoints();
+
+	//		std::vector<CameraSpacePoint> jcam(JointType_Count);
+	//		for (int j = 0; j < JointType_Count; ++j)
+	//		{
+	//			jcam[j] = jptr[j].Position;
+	//		}
+	//		std::vector<ColorSpacePoint> jcol(JointType_Count);
+
+	//		cm->MapCameraPointsToColorSpace(JointType_Count, jcam.data(), JointType_Count, jcol.data());
+
+	//		RGBQUAD col;
+	//		col.rgbRed = 200;
+	//		col.rgbGreen = 10;
+	//		col.rgbBlue = 10;
+	//		float x_ratio = (width + 0.0) / m_width;
+	//		float y_ratio = (height + 0.0) / m_height;
+	//		for (int j = 0; j < JointType_Count; ++j) {
+	//			int x = jcol[j].X * x_ratio;
+	//			int y = jcol[j].Y * y_ratio;
+	//			draw_circle(rgbx_resized.data(), width, height, x, y, 5, col);
+	//		}
+	//	}
+	//}
 
 
-	//HBITMAP hBmp = (HBITMAP)LoadImage(NULL, L"Chrysanthemum.bmp", IMAGE_BITMAP, 1024, 768, LR_LOADFROMFILE);
+	//m_width = width;
+	//m_height = height;
 
-	if (hBmp) {
-		//HBITMAP hBmp_old = m_maindisplay->SetBitmap(hBmp);
-		//m_maindisplay->SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
-		//
-		//if (hBmp_old) {
-		//	DeleteObject(hBmp_old);
-		//	//RedrawWindow();
-		//}
-		//else {
-		//	printf("WTF?\n");
-		//}
-		//SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
-	}
-	else {
-		printf("WTF?\n");
-	}
+	//HBITMAP hBmp = rgbquad_to_hbitmap(rgbx_resized.data(), m_width, m_height);
+
+
+	////HBITMAP hBmp = (HBITMAP)LoadImage(NULL, L"Chrysanthemum.bmp", IMAGE_BITMAP, 1024, 768, LR_LOADFROMFILE);
+
+	//if (hBmp) {
+	//	//HBITMAP hBmp_old = m_maindisplay->SetBitmap(hBmp);
+	//	//m_maindisplay->SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
+	//	//
+	//	//if (hBmp_old) {
+	//	//	DeleteObject(hBmp_old);
+	//	//	//RedrawWindow();
+	//	//}
+	//	//else {
+	//	//	printf("WTF?\n");
+	//	//}
+	//	//SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
+	//}
+	//else {
+	//	printf("WTF?\n");
+	//}
 
 }
 

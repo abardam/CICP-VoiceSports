@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "OpenGLControl.h"
-
+#include "rgbquad_util.h"
+#include <vector>
 
 COpenGLControl::COpenGLControl()
 {
@@ -11,6 +12,7 @@ COpenGLControl::COpenGLControl()
 	m_fRotY = 0.f;
 	m_fLastX = 0.f;
 	m_fLastY = 0.f;
+	m_kinectManager = 0;
 }
 
 
@@ -27,6 +29,20 @@ void COpenGLControl::oglCreate(CRect rect, CWnd * parent)
 	m_originalRect = rect;
 
 	hWnd = parent;
+}
+
+void COpenGLControl::oglSetTexture(RGBQUAD * img, int width, int height)
+{
+	if (m_texture) {
+		glDeleteTextures(1, &m_texture);
+	}
+	m_texture = oglInitTexture(img, width, height);
+}
+
+void COpenGLControl::oglSetKinect(Kinect2Manager * km)
+{
+	m_kinectManager = km;
+	m_kinectManager->InitializeDefaultSensor();
 }
 
 BEGIN_MESSAGE_MAP(COpenGLControl, CWnd)
@@ -74,47 +90,62 @@ void COpenGLControl::oglInitialize()
 
 void COpenGLControl::oglDrawScene()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(-1, 1, 1, -1);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glColor3f(1.f, 1.f, 1.f);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
 
 	glBegin(GL_QUADS);
-	// Top Side
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, -1.0f);
-	glVertex3f(-1.0f, 1.0f, -1.0f);
-	glVertex3f(-1.0f, 1.0f, 1.0f);
-
-	// Bottom Side
-	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(1.0f, -1.0f, -1.0f);
-	glVertex3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(-1.0f, -1.0f, 1.0f);
-
-	// Front Side
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, 1.0f);
-	glVertex3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, -1.0f, 1.0f);
-
-	// Back Side
-	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(-1.0f, 1.0f, -1.0f);
-	glVertex3f(1.0f, 1.0f, -1.0f);
-	glVertex3f(1.0f, -1.0f, -1.0f);
-
-	// Left Side
-	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, -1.0f);
-
-	// Right Side
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, -1.0f, -1.0f);
-	glVertex3f(1.0f, 1.0f, -1.0f);
-
+	glTexCoord2f(0.f, 0.f); glVertex2d(-1.0f, -1.0f);
+	glTexCoord2f(1.f, 0.f); glVertex2d(1.0f, -1.0f);
+	glTexCoord2f(1.f, 1.f); glVertex2d(1.0f, 1.0f);
+	glTexCoord2f(0.f, 1.f); glVertex2d(-1.0f, 1.0f);
 	glEnd();
 
+	RGBQUAD col;
+	col.rgbRed = 200;
+	col.rgbGreen = 10;
+	col.rgbBlue = 10;
+
+	//show skeleton (need coordinate mapper)
+	ICoordinateMapper * cm = m_kinectManager->getCoordinateMapper();
+	if (cm) {
+		if (m_kinectManager->getSkeletonIsGood()) {
+			Joint * jptr = m_kinectManager->GetJoints();
+
+			std::vector<CameraSpacePoint> jcam(JointType_Count);
+			for (int j = 0; j < JointType_Count; ++j)
+			{
+				jcam[j] = jptr[j].Position;
+			}
+			std::vector<ColorSpacePoint> jcol(JointType_Count);
+
+			cm->MapCameraPointsToColorSpace(JointType_Count, jcam.data(), JointType_Count, jcol.data());
+
+			float x_ratio = (2.f) / m_kinectOrigWidth;
+			float y_ratio = (2.f) / m_kinectOrigHeight;
+
+			float x_offset = -1.f;
+			float y_offset = -1.f;
+
+			glPointSize(5.f);
+			glBegin(GL_POINTS);
+
+			for (int j = 0; j < JointType_Count; ++j) {
+				int x = jcol[j].X * x_ratio + x_offset;
+				int y = jcol[j].Y * y_ratio + y_offset;
+
+				glVertex2f(x, y);
+			}
+
+			glEnd();
+		}
+	}
 }
 
 void COpenGLControl::OnPaint()
@@ -136,11 +167,11 @@ int COpenGLControl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void COpenGLControl::OnDraw(CDC * pDC)
 {
-	glLoadIdentity();
+	/*glLoadIdentity();
 	glTranslatef(0.f, 0.f, -m_fZoom);
 	glTranslatef(m_fPosX, m_fPosY, 0.f);
 	glRotatef(m_fRotX, 1.f, 0.f, 0.f);
-	glRotatef(m_fRotY, 0.f, 1.f, 0.f);
+	glRotatef(m_fRotY, 0.f, 1.f, 0.f);*/
 }
 
 
@@ -150,6 +181,27 @@ void COpenGLControl::OnTimer(UINT_PTR nIDEvent)
 	case 1:
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		if (m_kinectManager) {
+			m_kinectManager->Update(Update::Color | Update::Depth | Update::Body | Update::BodyIndex);
+			RGBQUAD * rgbx = m_kinectManager->GetColorRGBX();
+			int width = m_kinectManager->getColorWidth();
+			int height = m_kinectManager->getColorHeight();
+
+			int nWidth = 512;
+			int nHeight = 512;
+
+			std::vector<RGBQUAD> rgbx_res(nWidth * nHeight);
+
+			resize_rgbquad(rgbx, width, height, rgbx_res.data(), nWidth, nHeight);
+
+			oglSetTexture(rgbx_res.data(), nWidth, nHeight);
+
+			m_kinectOrigWidth = width;
+			m_kinectOrigHeight = height;
+			m_kinectNewWidth = nWidth;
+			m_kinectNewHeight = nHeight;
+		}
 
 		oglDrawScene();
 
@@ -186,7 +238,7 @@ void COpenGLControl::OnSize(UINT nType, int cx, int cy)
 
 void COpenGLControl::OnMouseMove(UINT nFlags, CPoint point)
 {
-	int diffX = (int)(point.x - m_fLastX);
+	/*int diffX = (int)(point.x - m_fLastX);
 	int diffY = (int)(point.y - m_fLastY);
 	m_fLastX = (float)point.x;
 	m_fLastY = (float)point.y;
@@ -210,7 +262,29 @@ void COpenGLControl::OnMouseMove(UINT nFlags, CPoint point)
 		m_fPosY -= (float)0.05f * diffY;
 	}
 
-	OnDraw(NULL);
+	OnDraw(NULL);*/
 
 	CWnd::OnMouseMove(nFlags, point);
+}
+
+GLuint oglInitTexture(RGBQUAD * img, int width, int height)
+{
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	// when texture area is small, bilinear filter the closest mipmap
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR_MIPMAP_NEAREST);
+	// when texture area is large, bilinear filter the original
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// the texture wraps over at the edges (repeat)
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 4, width, height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, img);
+
+	return texture;
 }
