@@ -110,11 +110,19 @@ BOOL CTestUIDlg::OnInitDialog()
 	// TODO: Add extra initialization here
 
 	// KINECT: set picture control variable so we can change the picture
-	m_maindisplay = (CStatic*)GetDlgItem(IDC_MAINDISPLAY); // this is the ID that we set in the dialog view
+	//m_maindisplay = (CStatic*)GetDlgItem(IDC_MAINDISPLAY); // this is the ID that we set in the dialog view
 	m_sport_cb = (CComboBox*)GetDlgItem(IDC_COMBO1);
 	m_action_cb = (CComboBox*)GetDlgItem(IDC_COMBO2);
-														  // KINECT: begin the thread
-	AfxBeginThread(KinectRefreshProc, this);
+														  
+	// KINECT: begin the thread
+	//AfxBeginThread(KinectRefreshProc, this);
+
+	//new style with OpenGL
+	CRect rect;
+	GetDlgItem(IDC_MAINDISPLAY)->GetWindowRect(rect);
+	ScreenToClient(rect);
+	m_oglWindow.oglCreate(rect, this);
+	m_oglWindow.m_unpTimer = m_oglWindow.SetTimer(1, 1, 0);
 
 	// init sports
 	Sport kendo_sp;
@@ -275,16 +283,16 @@ void CTestUIDlg::ShowKinect()
 	//HBITMAP hBmp = (HBITMAP)LoadImage(NULL, L"Chrysanthemum.bmp", IMAGE_BITMAP, 1024, 768, LR_LOADFROMFILE);
 
 	if (hBmp) {
-		HBITMAP hBmp_old = m_maindisplay->SetBitmap(hBmp);
-		m_maindisplay->SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
-
-		if (hBmp_old) {
-			DeleteObject(hBmp_old);
-			//RedrawWindow();
-		}
-		else {
-			printf("WTF?\n");
-		}
+		//HBITMAP hBmp_old = m_maindisplay->SetBitmap(hBmp);
+		//m_maindisplay->SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
+		//
+		//if (hBmp_old) {
+		//	DeleteObject(hBmp_old);
+		//	//RedrawWindow();
+		//}
+		//else {
+		//	printf("WTF?\n");
+		//}
 		//SetWindowPos(NULL, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOZORDER);
 	}
 	else {

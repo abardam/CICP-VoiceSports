@@ -6,6 +6,7 @@
 
 #include "../../KinectRead/Kinect2Manager.h"
 #include <vector>
+#include "OpenGLControl.h"
 
 struct Sport {
 	std::string name;
@@ -44,7 +45,9 @@ public:
 	void InitKinect();
 
 private:
-	CStatic * m_maindisplay;
+	//CStatic * m_maindisplay;
+	COpenGLControl m_oglWindow;
+
 	CComboBox * m_sport_cb;
 	CComboBox * m_action_cb;
 	int m_width, m_height;

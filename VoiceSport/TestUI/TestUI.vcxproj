@@ -121,7 +121,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(KINECTSDK2_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Kinect20.lib</AdditionalDependencies>
+      <AdditionalDependencies>Kinect20.lib;opengl32.lib;glu32.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -195,6 +195,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="OpenGLControl.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="rgbquad_util.h" />
     <ClInclude Include="stdafx.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="TestUIDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="OpenGLControl.cpp" />
     <ClCompile Include="rgbquad_util.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
