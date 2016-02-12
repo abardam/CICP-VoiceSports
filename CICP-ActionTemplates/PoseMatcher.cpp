@@ -4,8 +4,6 @@
 #include <cmath>
 #include <atlstr.h>
 
-#define COORD 3	// Number of coordinates in each joint position (3D: x-y-z)
-
 const std::vector<std::string> PoseMatcher::poses = { "jodan", "kamae", "sonkyo", "suburi", "tsubazeriai" };
 const std::vector<std::string> PoseMatcher::actors = { "antonio", "emi", "enzo", "nunu", "truong", "antonio", "emi", "enzo", "nunu", "truong" };
 
@@ -32,7 +30,7 @@ PoseMatcher::PoseMatcher()
 			actskeleton action = Reader.readSkeleton(charpath, NUM_JOINTS);
 
 			// Average the pose
-			size_t num_frames = action.positions_a.size();
+			size_t num_frames = action.poses.size();
 
 			for (unsigned int j = 0; j < NUM_JOINTS; ++j)
 			{
@@ -44,11 +42,11 @@ PoseMatcher::PoseMatcher()
 
 				for (unsigned int f = 0; f < num_frames; ++f)
 				{
-					average_p.rightleft += action.positions_a[f].at(j).rightleft;
-					average_p.updown += action.positions_a[f].at(j).updown;
-					average_p.fwdbwd += action.positions_a[f].at(j).fwdbwd;
+					average_p.rightleft += action.poses.at(f).positions[j].rightleft;
+					average_p.updown += action.poses.at(f).positions[j].updown;
+					average_p.fwdbwd += action.poses.at(f).positions[j].fwdbwd;
 
-					average_c += (int) action.confidences_a[f].at(j);
+					average_c += (int)action.poses.at(f).confidences[j];
 				}
 				posedataset[p][a].positions[j].rightleft = average_p.rightleft / num_frames;
 				posedataset[p][a].positions[j].updown = average_p.updown / num_frames;
@@ -115,15 +113,15 @@ int PoseMatcher::fitSkeleton(posskeleton inskel, int action)
 
 	// Check if the skeleton is frontal or lateral
 	bool frontal = isFrontOrSide(inskel);
-	
+
 	// Choose the most appropriate user/skeleton (height)
 	double heightskel = calculateHeight(inskel);
-	
+
 	int user = 0;
 	double diff = 2000;
 	if (frontal)
 	{
-		for (unsigned int u = 0; u < 5; ++u)
+		for (unsigned int u = 0; u < NUM_ACTORS / 2; ++u)
 		{
 			if (abs(heightskel - heightdataset[action][u]) < diff)
 			{
@@ -133,7 +131,7 @@ int PoseMatcher::fitSkeleton(posskeleton inskel, int action)
 	}
 	else
 	{
-		for (unsigned int u = 5; u < 10; ++u)
+		for (unsigned int u = NUM_ACTORS / 2; u < NUM_ACTORS; ++u)
 		{
 			if (abs(heightskel - heightdataset[action][u]) < diff)
 			{

@@ -2,9 +2,11 @@
 #include <vector>
 #include <array>
 
-#define HAR_PATH "D:\\Notes\\IPGP\\CICP2015\\Database\\"
+#define HAR_PATH "..\\Database\\"
 
 #define NUM_JOINTS 15	// Number of joints in the skeleton model
+
+#define NUM_COORD 3	// Number of coordinates in each joint position (3D: x-y-z)
 
 // The order of the joints in the array is:
 #define HEAD 0
@@ -35,10 +37,11 @@ struct position {
 
 struct posskeleton {
 	position positions[NUM_JOINTS];
-	bool confidences[NUM_JOINTS];
+	int confidences[NUM_JOINTS];
 };
 
 struct actskeleton {
-	std::vector<std::array<position, NUM_JOINTS> > positions_a;
-	std::vector<std::array<bool, NUM_JOINTS> > confidences_a;
+	//std::vector<std::array<position, NUM_JOINTS> > positions_a;
+	//std::vector<std::array<bool, NUM_JOINTS> > confidences_a;
+	std::vector < posskeleton > poses;
 };

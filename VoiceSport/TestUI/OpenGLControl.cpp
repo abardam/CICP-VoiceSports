@@ -90,6 +90,8 @@ void COpenGLControl::oglInitialize()
 
 void COpenGLControl::oglDrawScene()
 {
+	glDisable(GL_DEPTH_TEST);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-1, 1, 1, -1);
@@ -133,12 +135,13 @@ void COpenGLControl::oglDrawScene()
 			float x_offset = -1.f;
 			float y_offset = -1.f;
 
-			glPointSize(5.f);
+			glColor3f(1, 0, 0);
+			glPointSize(10.f);
 			glBegin(GL_POINTS);
 
 			for (int j = 0; j < JointType_Count; ++j) {
-				int x = jcol[j].X * x_ratio + x_offset;
-				int y = jcol[j].Y * y_ratio + y_offset;
+				float x = jcol[j].X * x_ratio + x_offset;
+				float y = jcol[j].Y * y_ratio + y_offset;
 
 				glVertex2f(x, y);
 			}
