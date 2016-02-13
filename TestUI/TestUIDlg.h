@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "../../KinectRead/Kinect2Manager.h"
+#include "../KinectRead/Kinect2Manager.h"
 #include <vector>
 #include "OpenGLControl.h"
-#include "..\..\CICP-ActionTemplates\UtilsHAR.h"
-#include "..\..\CICP-ActionTemplates\PoseMatcher.h"
+#include "../CICP-ActionTemplates/UtilsHAR.h"
+#include "../CICP-ActionTemplates/PoseMatcher.h"
 
 struct Sport {
 	std::string name;
@@ -63,6 +63,9 @@ private:
 	Kinect2Manager m_kinectManager;
 	PoseMatcher m_poseMatcher;
 
+	// corresponding kinect joint for each "Antonio joint"
+	int m_kinectJointMap[NUM_JOINTS];
+
 public:
 //	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 
@@ -82,4 +85,5 @@ public:
 	afx_msg void OnBnClickedCheck13();
 	afx_msg void OnBnClickedCheck14();
 	afx_msg void OnBnClickedCheck15();
+	afx_msg void OnCbnSelchangeCombo2();
 };

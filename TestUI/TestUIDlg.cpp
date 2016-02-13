@@ -88,6 +88,7 @@ ON_BN_CLICKED(IDC_CHECK12, &CTestUIDlg::OnBnClickedCheck12)
 ON_BN_CLICKED(IDC_CHECK13, &CTestUIDlg::OnBnClickedCheck13)
 ON_BN_CLICKED(IDC_CHECK14, &CTestUIDlg::OnBnClickedCheck14)
 ON_BN_CLICKED(IDC_CHECK15, &CTestUIDlg::OnBnClickedCheck15)
+ON_CBN_SELCHANGE(IDC_COMBO2, &CTestUIDlg::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 
@@ -144,6 +145,23 @@ BOOL CTestUIDlg::OnInitDialog()
 	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK13));
 	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK14));
 	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK15));
+
+	//populate kinect joint map
+	m_kinectJointMap[HEAD] = JointType_Head;
+	m_kinectJointMap[NECK] = JointType_Neck;
+	m_kinectJointMap[LSHOULDER] = JointType_ShoulderLeft;
+	m_kinectJointMap[LELBOW] = JointType_ElbowLeft;
+	m_kinectJointMap[LHAND] = JointType_HandLeft;
+	m_kinectJointMap[RSHOULDER] = JointType_ShoulderRight;
+	m_kinectJointMap[RELBOW] = JointType_ElbowRight;
+	m_kinectJointMap[RHAND] = JointType_HandRight;
+	m_kinectJointMap[TORSO] = JointType_SpineMid;
+	m_kinectJointMap[LHIP] = JointType_HipLeft;
+	m_kinectJointMap[LKNEE] = JointType_KneeLeft;
+	m_kinectJointMap[LFOOT] = JointType_FootLeft;
+	m_kinectJointMap[RHIP] = JointType_HipRight;
+	m_kinectJointMap[RKNEE] = JointType_KneeRight;
+	m_kinectJointMap[RFOOT] = JointType_FootRight;
 
 	//new style with OpenGL
 	CRect rect;
@@ -370,19 +388,18 @@ void CTestUIDlg::UpdateAdviceSkeleton() {
 	if (m_kinectManager.getSkeletonIsGood()) {
 		Joint * jptr = m_kinectManager.GetJoints();
 
-		std::vector<CameraSpacePoint> jcam(JointType_Count);
-		for (int j = 0; j < JointType_Count; ++j)
+		for (int j = 0; j < NUM_JOINTS; ++j)
 		{
-			inskel.positions[j].rightleft = jptr[j].Position.X;
-			inskel.positions[j].updown = jptr[j].Position.Y;
-			inskel.positions[j].fwdbwd = jptr[j].Position.Z;
-			inskel.confidences[j] = jptr[j].TrackingState;
+			inskel.positions[j].rightleft = jptr[m_kinectJointMap[j]].Position.X;
+			inskel.positions[j].updown = jptr[m_kinectJointMap[j]].Position.Y;
+			inskel.positions[j].fwdbwd = jptr[m_kinectJointMap[j]].Position.Z;
+			inskel.confidences[j] = jptr[m_kinectJointMap[j]].TrackingState;
 		}
 
 	}
 	else {
 		//shitty test data
-		for (int j = 0; j < JointType_Count; ++j) {
+		for (int j = 0; j < NUM_JOINTS; ++j) {
 			inskel.positions[j].rightleft = 0;
 			inskel.positions[j].updown = 0;
 			inskel.positions[j].fwdbwd = 0;
@@ -397,6 +414,10 @@ void CTestUIDlg::UpdateAdviceSkeleton() {
 
 	int action;
 	action = m_action_cb->GetCurSel();
+
+	if (action < 0) {
+		return;
+	}
 
 	posskeleton feedback;
 	posskeleton fitpose;
@@ -527,4 +548,10 @@ void CTestUIDlg::OnBnClickedCheck15()
 {
 	ClickBodyPartCheckBox();
 
+}
+
+
+void CTestUIDlg::OnCbnSelchangeCombo2()
+{
+	UpdateAdviceSkeleton();
 }

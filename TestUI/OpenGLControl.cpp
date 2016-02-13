@@ -13,6 +13,7 @@ COpenGLControl::COpenGLControl()
 	m_fLastX = 0.f;
 	m_fLastY = 0.f;
 	m_kinectManager = 0;
+	m_bHasAdviceSkeleton = false;
 }
 
 
@@ -43,6 +44,12 @@ void COpenGLControl::oglSetKinect(Kinect2Manager * km)
 {
 	m_kinectManager = km;
 	m_kinectManager->InitializeDefaultSensor();
+}
+
+void COpenGLControl::oglSetAdviceSkeleton(const posskeleton & skeleton)
+{
+	m_adviceSkeleton = skeleton;
+	m_bHasAdviceSkeleton = true;
 }
 
 BEGIN_MESSAGE_MAP(COpenGLControl, CWnd)
@@ -140,6 +147,39 @@ void COpenGLControl::oglDrawScene()
 			glBegin(GL_POINTS);
 
 			for (int j = 0; j < JointType_Count; ++j) {
+				float x = jcol[j].X * x_ratio + x_offset;
+				float y = jcol[j].Y * y_ratio + y_offset;
+
+				glVertex2f(x, y);
+			}
+
+			glEnd();
+		}
+
+		if (m_bHasAdviceSkeleton) {
+
+			std::vector<CameraSpacePoint> jcam(NUM_JOINTS);
+			for (int j = 0; j < NUM_JOINTS; ++j)
+			{
+				jcam[j].X = m_adviceSkeleton.positions[j].rightleft;
+				jcam[j].Y = m_adviceSkeleton.positions[j].updown;
+				jcam[j].Z = m_adviceSkeleton.positions[j].fwdbwd;
+			}
+			std::vector<ColorSpacePoint> jcol(NUM_JOINTS);
+
+			cm->MapCameraPointsToColorSpace(NUM_JOINTS, jcam.data(), NUM_JOINTS, jcol.data());
+
+			float x_ratio = (2.f) / m_kinectOrigWidth;
+			float y_ratio = (2.f) / m_kinectOrigHeight;
+
+			float x_offset = -1.f;
+			float y_offset = -1.f;
+
+			glColor3f(0, 1, 0);
+			glPointSize(10.f);
+			glBegin(GL_POINTS);
+
+			for (int j = 0; j < NUM_JOINTS; ++j) {
 				float x = jcol[j].X * x_ratio + x_offset;
 				float y = jcol[j].Y * y_ratio + y_offset;
 
