@@ -225,10 +225,10 @@
     <Image Include="res\TestUI.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CICP-ActionTemplates\CICP-ActionTemplates.vcxproj">
+    <ProjectReference Include="..\CICP-ActionTemplates\CICP-ActionTemplates.vcxproj">
       <Project>{4d0d1812-8059-4816-b55d-3b7ac028caf5}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\KinectRead\KinectRead.vcxproj">
+    <ProjectReference Include="..\KinectRead\KinectRead.vcxproj">
       <Project>{38261b44-ae5e-4012-a2ef-768c984d1fb6}</Project>
     </ProjectReference>
   </ItemGroup>

@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectRead", "..\KinectRead
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestKinectRead-MFC", "..\TestKinectRead-MFC\TestKinectRead-MFC.vcxproj", "{51A38AB8-95E3-4582-915C-C5A78230A182}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestUI", "TestUI\TestUI.vcxproj", "{7F2379AD-BB29-4CC0-9C2F-10432062DC17}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestUI", "..\TestUI\TestUI.vcxproj", "{7F2379AD-BB29-4CC0-9C2F-10432062DC17}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CICP-ActionTemplates", "..\CICP-ActionTemplates\CICP-ActionTemplates.vcxproj", "{4D0D1812-8059-4816-B55D-3B7AC028CAF5}"
 EndProject
