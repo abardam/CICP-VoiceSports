@@ -11,3 +11,20 @@ int * getKinectJointMap()
 {
 	return kinectJointMap;
 }
+
+int kinectSegments[NUM_SEGMENTS * 2] = {
+	HEAD, NECK,
+	NECK, TORSO,
+	LSHOULDER, LELBOW,
+	LELBOW, LHAND,
+	RSHOULDER, RELBOW,
+	RELBOW, RHAND,
+	LHIP, LKNEE,
+	LKNEE, LFOOT,
+	RHIP, RKNEE,
+	RKNEE, RFOOT
+};
+
+int * getKinectSegments() {
+	return kinectSegments;
+}

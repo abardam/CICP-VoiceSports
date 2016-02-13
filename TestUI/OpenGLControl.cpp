@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "OpenGLControl.h"
 #include "rgbquad_util.h"
+#include "antonio_skeleton_util.h"
 #include <vector>
 
 COpenGLControl::COpenGLControl()
@@ -124,17 +125,20 @@ void COpenGLControl::oglDrawScene()
 	//show skeleton (need coordinate mapper)
 	ICoordinateMapper * cm = m_kinectManager->getCoordinateMapper();
 	if (cm) {
+		int * kinectJointMap = getKinectJointMap();
+		int * kinectSegments = getKinectSegments();
+
 		if (m_kinectManager->getSkeletonIsGood()) {
 			Joint * jptr = m_kinectManager->GetJoints();
 
-			std::vector<CameraSpacePoint> jcam(JointType_Count);
-			for (int j = 0; j < JointType_Count; ++j)
+			std::vector<CameraSpacePoint> jcam(NUM_JOINTS);
+			for (int j = 0; j < NUM_JOINTS; ++j)
 			{
-				jcam[j] = jptr[j].Position;
+				jcam[j] = jptr[kinectJointMap[j]].Position;
 			}
-			std::vector<ColorSpacePoint> jcol(JointType_Count);
+			std::vector<ColorSpacePoint> jcol(NUM_JOINTS);
 
-			cm->MapCameraPointsToColorSpace(JointType_Count, jcam.data(), JointType_Count, jcol.data());
+			cm->MapCameraPointsToColorSpace(NUM_JOINTS, jcam.data(), NUM_JOINTS, jcol.data());
 
 			float x_ratio = (2.f) / m_kinectOrigWidth;
 			float y_ratio = (2.f) / m_kinectOrigHeight;
@@ -146,11 +150,28 @@ void COpenGLControl::oglDrawScene()
 			glPointSize(10.f);
 			glBegin(GL_POINTS);
 
-			for (int j = 0; j < JointType_Count; ++j) {
+			for (int j = 0; j < NUM_JOINTS; ++j) {
 				float x = jcol[j].X * x_ratio + x_offset;
 				float y = jcol[j].Y * y_ratio + y_offset;
 
 				glVertex2f(x, y);
+			}
+
+			glEnd();
+
+			glBegin(GL_LINES);
+
+			for (int j = 0; j < NUM_SEGMENTS; ++j) {
+				int j1 = kinectSegments[2 * j + 0];
+				int j2 = kinectSegments[2 * j + 1];
+
+				float x1 = jcol[j1].X * x_ratio + x_offset;
+				float y1 = jcol[j1].Y * y_ratio + y_offset;
+				float x2 = jcol[j2].X * x_ratio + x_offset;
+				float y2 = jcol[j2].Y * y_ratio + y_offset;
+
+				glVertex2f(x1, y1);
+				glVertex2f(x2, y2);
 			}
 
 			glEnd();
@@ -184,6 +205,23 @@ void COpenGLControl::oglDrawScene()
 				float y = jcol[j].Y * y_ratio + y_offset;
 
 				glVertex2f(x, y);
+			}
+
+			glEnd();
+
+			glBegin(GL_LINES);
+
+			for (int j = 0; j < NUM_SEGMENTS; ++j) {
+				int j1 = kinectSegments[2 * j + 0];
+				int j2 = kinectSegments[2 * j + 1];
+
+				float x1 = jcol[j1].X * x_ratio + x_offset;
+				float y1 = jcol[j1].Y * y_ratio + y_offset;
+				float x2 = jcol[j2].X * x_ratio + x_offset;
+				float y2 = jcol[j2].Y * y_ratio + y_offset;
+
+				glVertex2f(x1, y1);
+				glVertex2f(x2, y2);
 			}
 
 			glEnd();
