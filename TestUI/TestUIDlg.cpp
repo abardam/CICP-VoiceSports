@@ -14,7 +14,7 @@
 #include "rgbquad_util.h"
 
 // KINECT: include KinectRead project
-#include "..\..\KinectRead\Kinect2Manager.h"
+#include "..\KinectRead\Kinect2Manager.h"
 
 // KINECT: declaration for thread loop function
 UINT KinectRefreshProc(LPVOID pParam);

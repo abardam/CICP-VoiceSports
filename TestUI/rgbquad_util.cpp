@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "rgbquad_util.h"
-#include "..\..\KinectRead\Kinect2Manager.h"
+#include "..\KinectRead\Kinect2Manager.h"
 
 // KINECT: function to return the Kinect input as HBITMAP.
 
