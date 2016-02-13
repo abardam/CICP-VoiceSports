@@ -1,3 +1,5 @@
+#pragma once
+
 /*Useful variables for human action recognition*/
 #include <vector>
 #include <array>

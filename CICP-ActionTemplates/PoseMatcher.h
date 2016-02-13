@@ -1,3 +1,4 @@
+#pragma once
 #include "SkeletonReader.h"
 
 #define NUM_POSES 5	// Number of poses in our dataset
