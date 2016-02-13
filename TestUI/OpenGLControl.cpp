@@ -231,8 +231,9 @@ void COpenGLControl::OnTimer(UINT_PTR nIDEvent)
 			int width = m_kinectManager->getColorWidth();
 			int height = m_kinectManager->getColorHeight();
 
+			//resize texture (faster)
 			int nWidth = 512;
-			int nHeight = 512;
+			int nHeight = 256;
 
 			std::vector<RGBQUAD> rgbx_res(nWidth * nHeight);
 
@@ -244,6 +245,14 @@ void COpenGLControl::OnTimer(UINT_PTR nIDEvent)
 			m_kinectOrigHeight = height;
 			m_kinectNewWidth = nWidth;
 			m_kinectNewHeight = nHeight;
+
+			//use original texture (slow)
+			/*oglSetTexture(rgbx, width, height);
+
+			m_kinectOrigWidth = width;
+			m_kinectOrigHeight = height;
+			m_kinectNewWidth = width;
+			m_kinectNewHeight = height; */
 		}
 
 		oglDrawScene();

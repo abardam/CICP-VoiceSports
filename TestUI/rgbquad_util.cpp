@@ -69,7 +69,8 @@ void resize_rgbquad(RGBQUAD * in, int in_w, int in_h, RGBQUAD * out, int out_w, 
 			int in_y = y * h_ratio;
 			int in_y2 = y2 * h_ratio;
 
-			unsigned int r = 0, g = 0, b = 0;
+			// linear interpolation
+			/*unsigned int r = 0, g = 0, b = 0;
 
 			in_x2 = in_x2 <= in_x ? in_x + 1 : in_x2;
 			in_y2 = in_y2 <= in_y ? in_y + 1 : in_y2;
@@ -85,10 +86,14 @@ void resize_rgbquad(RGBQUAD * in, int in_w, int in_h, RGBQUAD * out, int out_w, 
 			r /= div;
 			g /= div;
 			b /= div;
-
+			
 			out[y * out_w + x].rgbRed = r;
 			out[y * out_w + x].rgbGreen = g;
 			out[y * out_w + x].rgbBlue = b;
+			*/
+
+			//nearest neighbor (faster)
+			out[y * out_w + x] = in[in_y * in_w + in_x];
 		}
 	}
 }

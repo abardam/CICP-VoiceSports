@@ -47,3 +47,4 @@ struct actskeleton {
 	//std::vector<std::array<bool, NUM_JOINTS> > confidences_a;
 	std::vector < posskeleton > poses;
 };
+

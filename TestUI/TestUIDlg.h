@@ -64,7 +64,8 @@ private:
 	PoseMatcher m_poseMatcher;
 
 	// corresponding kinect joint for each "Antonio joint"
-	int m_kinectJointMap[NUM_JOINTS];
+	//UPDATE: moved to UtilsHAR.cpp
+	//int m_kinectJointMap[NUM_JOINTS];
 
 public:
 //	afx_msg BOOL OnEraseBkgnd(CDC* pDC);

@@ -12,6 +12,7 @@
 #endif
 
 #include "rgbquad_util.h"
+#include "antonio_skeleton_util.h"
 
 // KINECT: include KinectRead project
 #include "..\KinectRead\Kinect2Manager.h"
@@ -147,7 +148,8 @@ BOOL CTestUIDlg::OnInitDialog()
 	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK15));
 
 	//populate kinect joint map
-	m_kinectJointMap[HEAD] = JointType_Head;
+	//UPDATE: moved to UtilsHAR.cpp
+	/*m_kinectJointMap[HEAD] = JointType_Head;
 	m_kinectJointMap[NECK] = JointType_Neck;
 	m_kinectJointMap[LSHOULDER] = JointType_ShoulderLeft;
 	m_kinectJointMap[LELBOW] = JointType_ElbowLeft;
@@ -161,7 +163,7 @@ BOOL CTestUIDlg::OnInitDialog()
 	m_kinectJointMap[LFOOT] = JointType_FootLeft;
 	m_kinectJointMap[RHIP] = JointType_HipRight;
 	m_kinectJointMap[RKNEE] = JointType_KneeRight;
-	m_kinectJointMap[RFOOT] = JointType_FootRight;
+	m_kinectJointMap[RFOOT] = JointType_FootRight;*/
 
 	//new style with OpenGL
 	CRect rect;
@@ -387,13 +389,14 @@ void CTestUIDlg::UpdateAdviceSkeleton() {
 	posskeleton inskel;
 	if (m_kinectManager.getSkeletonIsGood()) {
 		Joint * jptr = m_kinectManager.GetJoints();
+		int * kinectJointMap = getKinectJointMap();
 
 		for (int j = 0; j < NUM_JOINTS; ++j)
 		{
-			inskel.positions[j].rightleft = jptr[m_kinectJointMap[j]].Position.X;
-			inskel.positions[j].updown = jptr[m_kinectJointMap[j]].Position.Y;
-			inskel.positions[j].fwdbwd = jptr[m_kinectJointMap[j]].Position.Z;
-			inskel.confidences[j] = jptr[m_kinectJointMap[j]].TrackingState;
+			inskel.positions[j].rightleft = jptr[kinectJointMap[j]].Position.X;
+			inskel.positions[j].updown = jptr[kinectJointMap[j]].Position.Y;
+			inskel.positions[j].fwdbwd = jptr[kinectJointMap[j]].Position.Z;
+			inskel.confidences[j] = jptr[kinectJointMap[j]].TrackingState;
 		}
 
 	}

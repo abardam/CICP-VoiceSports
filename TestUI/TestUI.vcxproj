@@ -195,6 +195,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="antonio_skeleton_util.h" />
     <ClInclude Include="OpenGLControl.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="rgbquad_util.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="TestUIDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="antonio_skeleton_util.cpp" />
     <ClCompile Include="OpenGLControl.cpp" />
     <ClCompile Include="rgbquad_util.cpp" />
     <ClCompile Include="stdafx.cpp">
