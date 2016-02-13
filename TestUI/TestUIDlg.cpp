@@ -422,6 +422,8 @@ void CTestUIDlg::UpdateAdviceSkeleton() {
 	posskeleton feedback;
 	posskeleton fitpose;
 	m_poseMatcher.weightedPoseMatching(inskel, fbjoints, action, &feedback, &fitpose);
+
+	m_oglWindow.oglSetAdviceSkeleton(fitpose);
 }
 
 
