@@ -1,5 +1,5 @@
-#include "antonio_skeleton_util.h"
 #include "stdafx.h"
+#include "antonio_skeleton_util.h"
 #include <Kinect.h>
 #include "../CICP-ActionTemplates/UtilsHAR.h"
 
