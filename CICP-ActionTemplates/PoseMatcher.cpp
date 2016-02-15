@@ -21,7 +21,7 @@ PoseMatcher::PoseMatcher()
 	{
 		for (unsigned int a = 0; a < NUM_ACTORS; ++a)
 		{
-			rep = (p < 5) ? "front" : "side";
+			rep = (a < 5) ? "front" : "side";
 
 			// Path format: kamae\\antonio_kamae_front\\skeleton
 			path = HAR_PATH + poses.at(p) + "\\" + actors.at(a) + "_" + poses.at(p) + "_" + rep + "\\skeleton\\";
@@ -106,13 +106,13 @@ double PoseMatcher::calculateHeight(posskeleton inskel)
 	return inskel.positions[HEAD].updown - (inskel.positions[RFOOT].updown + inskel.positions[LFOOT].updown) / 2;
 }
 
-int PoseMatcher::fitSkeleton(posskeleton inskel, int action)
+int PoseMatcher::fitSkeleton(posskeleton inskel, int action, bool frontal)
 {
 	// Normalize the skeleton with respect to the center
 	this->normalizeSkeleton(&inskel);
 
 	// Check if the skeleton is frontal or lateral
-	bool frontal = isFrontOrSide(inskel);
+	//bool frontal = isFrontOrSide(inskel);
 
 	// Choose the most appropriate user/skeleton (height)
 	double heightskel = calculateHeight(inskel);
@@ -143,10 +143,10 @@ int PoseMatcher::fitSkeleton(posskeleton inskel, int action)
 	return user;
 }
 
-void PoseMatcher::weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action, posskeleton* feedback, posskeleton* fitpose)
+void PoseMatcher::weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action, bool frontal, posskeleton* feedback, posskeleton* fitpose)
 {
 	// USER + ACTION + FRONTAL = COMPARABLE SKELETON
-	int user = fitSkeleton(inskel, action);
+	int user = fitSkeleton(inskel, action, frontal);
 	posskeleton compskel = posedataset[action][user];
 
 	// Calculate the feedback for each joint

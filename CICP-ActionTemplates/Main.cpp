@@ -21,7 +21,7 @@ int main(int argc, char *argv)
 
 	posskeleton feedback, fitpose;
 	
-	matcher.weightedPoseMatching(inskel, fbjoints, action, &feedback, &fitpose);
+	matcher.weightedPoseMatching(inskel, fbjoints, action, true, &feedback, &fitpose);
 
 	for (int j = 0; j < NUM_JOINTS; ++j)
 	{
