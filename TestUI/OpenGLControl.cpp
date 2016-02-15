@@ -175,57 +175,60 @@ void COpenGLControl::oglDrawScene()
 			}
 
 			glEnd();
+
+
+			if (m_bHasAdviceSkeleton) {
+
+				std::vector<CameraSpacePoint> adv_jcam(NUM_JOINTS);
+				for (int j = 0; j < NUM_JOINTS; ++j)
+				{
+					adv_jcam[j].X = m_adviceSkeleton.positions[j].rightleft + jcam[TORSO].X;
+					adv_jcam[j].Y = m_adviceSkeleton.positions[j].updown + jcam[TORSO].Y;
+					adv_jcam[j].Z = m_adviceSkeleton.positions[j].fwdbwd + jcam[TORSO].Z;
+				}
+				std::vector<ColorSpacePoint> adv_jcol(NUM_JOINTS);
+
+				cm->MapCameraPointsToColorSpace(NUM_JOINTS, adv_jcam.data(), NUM_JOINTS, adv_jcol.data());
+
+				float x_ratio = (2.f) / m_kinectOrigWidth;
+				float y_ratio = (2.f) / m_kinectOrigHeight;
+
+				float x_offset = -1.f;
+				float y_offset = -1.f;
+
+				glColor3f(0, 1, 0);
+				glPointSize(10.f);
+				glBegin(GL_POINTS);
+
+				for (int j = 0; j < NUM_JOINTS; ++j) {
+					float x = adv_jcol[j].X * x_ratio + x_offset;
+					float y = adv_jcol[j].Y * y_ratio + y_offset;
+
+					glVertex2f(x, y);
+				}
+
+				glEnd();
+
+				glBegin(GL_LINES);
+
+				for (int j = 0; j < NUM_SEGMENTS; ++j) {
+					int j1 = kinectSegments[2 * j + 0];
+					int j2 = kinectSegments[2 * j + 1];
+
+					float x1 = adv_jcol[j1].X * x_ratio + x_offset;
+					float y1 = adv_jcol[j1].Y * y_ratio + y_offset;
+					float x2 = adv_jcol[j2].X * x_ratio + x_offset;
+					float y2 = adv_jcol[j2].Y * y_ratio + y_offset;
+
+					glVertex2f(x1, y1);
+					glVertex2f(x2, y2);
+				}
+
+				glEnd();
+			}
 		}
 
-		if (m_bHasAdviceSkeleton) {
-
-			std::vector<CameraSpacePoint> jcam(NUM_JOINTS);
-			for (int j = 0; j < NUM_JOINTS; ++j)
-			{
-				jcam[j].X = m_adviceSkeleton.positions[j].rightleft;
-				jcam[j].Y = m_adviceSkeleton.positions[j].updown;
-				jcam[j].Z = m_adviceSkeleton.positions[j].fwdbwd;
-			}
-			std::vector<ColorSpacePoint> jcol(NUM_JOINTS);
-
-			cm->MapCameraPointsToColorSpace(NUM_JOINTS, jcam.data(), NUM_JOINTS, jcol.data());
-
-			float x_ratio = (2.f) / m_kinectOrigWidth;
-			float y_ratio = (2.f) / m_kinectOrigHeight;
-
-			float x_offset = -1.f;
-			float y_offset = -1.f;
-
-			glColor3f(0, 1, 0);
-			glPointSize(10.f);
-			glBegin(GL_POINTS);
-
-			for (int j = 0; j < NUM_JOINTS; ++j) {
-				float x = jcol[j].X * x_ratio + x_offset;
-				float y = jcol[j].Y * y_ratio + y_offset;
-
-				glVertex2f(x, y);
-			}
-
-			glEnd();
-
-			glBegin(GL_LINES);
-
-			for (int j = 0; j < NUM_SEGMENTS; ++j) {
-				int j1 = kinectSegments[2 * j + 0];
-				int j2 = kinectSegments[2 * j + 1];
-
-				float x1 = jcol[j1].X * x_ratio + x_offset;
-				float y1 = jcol[j1].Y * y_ratio + y_offset;
-				float x2 = jcol[j2].X * x_ratio + x_offset;
-				float y2 = jcol[j2].Y * y_ratio + y_offset;
-
-				glVertex2f(x1, y1);
-				glVertex2f(x2, y2);
-			}
-
-			glEnd();
-		}
+		
 	}
 }
 
@@ -261,7 +264,6 @@ void COpenGLControl::OnTimer(UINT_PTR nIDEvent)
 	switch (nIDEvent) {
 	case 1:
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (m_kinectManager) {
 			m_kinectManager->Update(Update::Color | Update::Depth | Update::Body | Update::BodyIndex);
@@ -269,29 +271,33 @@ void COpenGLControl::OnTimer(UINT_PTR nIDEvent)
 			int width = m_kinectManager->getColorWidth();
 			int height = m_kinectManager->getColorHeight();
 
-			//resize texture (faster)
-			int nWidth = 512;
-			int nHeight = 256;
+			if (width > 0 && height > 0) {
 
-			std::vector<RGBQUAD> rgbx_res(nWidth * nHeight);
+				//resize texture (faster)
+				int nWidth = 512;
+				int nHeight = 256;
 
-			resize_rgbquad(rgbx, width, height, rgbx_res.data(), nWidth, nHeight);
+				std::vector<RGBQUAD> rgbx_res(nWidth * nHeight);
 
-			oglSetTexture(rgbx_res.data(), nWidth, nHeight);
+				resize_rgbquad(rgbx, width, height, rgbx_res.data(), nWidth, nHeight);
 
-			m_kinectOrigWidth = width;
-			m_kinectOrigHeight = height;
-			m_kinectNewWidth = nWidth;
-			m_kinectNewHeight = nHeight;
+				oglSetTexture(rgbx_res.data(), nWidth, nHeight);
 
-			//use original texture (slow)
-			/*oglSetTexture(rgbx, width, height);
+				m_kinectOrigWidth = width;
+				m_kinectOrigHeight = height;
+				m_kinectNewWidth = nWidth;
+				m_kinectNewHeight = nHeight;
 
-			m_kinectOrigWidth = width;
-			m_kinectOrigHeight = height;
-			m_kinectNewWidth = width;
-			m_kinectNewHeight = height; */
+				//use original texture (slow)
+				/*oglSetTexture(rgbx, width, height);
+
+				m_kinectOrigWidth = width;
+				m_kinectOrigHeight = height;
+				m_kinectNewWidth = width;
+				m_kinectNewHeight = height; */
+			}
 		}
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		oglDrawScene();
 
