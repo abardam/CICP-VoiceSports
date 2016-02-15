@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Performance1.psess = Performance1.psess
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpeechAPI", "..\SpeechAPI\ConsoleApplication1.vcxproj", "{68D3417F-31B4-4397-86AB-54478D7ACFA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -66,8 +68,19 @@ Global
 		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Release|x64.Build.0 = Release|x64
 		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Release|x86.ActiveCfg = Release|Win32
 		{4D0D1812-8059-4816-B55D-3B7AC028CAF5}.Release|x86.Build.0 = Release|Win32
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Debug|x64.ActiveCfg = Debug|x64
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Debug|x64.Build.0 = Debug|x64
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Debug|x86.ActiveCfg = Debug|Win32
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Debug|x86.Build.0 = Debug|Win32
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Release|x64.ActiveCfg = Release|x64
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Release|x64.Build.0 = Release|x64
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Release|x86.ActiveCfg = Release|Win32
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{68D3417F-31B4-4397-86AB-54478D7ACFA5} = {243222C1-DB5F-47A5-AB1D-CBD8F2CEFB9C}
 	EndGlobalSection
 EndGlobal

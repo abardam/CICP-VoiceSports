@@ -233,6 +233,9 @@
     <ProjectReference Include="..\KinectRead\KinectRead.vcxproj">
       <Project>{38261b44-ae5e-4012-a2ef-768c984d1fb6}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\SpeechAPI\ConsoleApplication1.vcxproj">
+      <Project>{68d3417f-31b4-4397-86ab-54478d7acfa5}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

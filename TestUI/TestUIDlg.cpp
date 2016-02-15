@@ -7,6 +7,9 @@
 #include "TestUIDlg.h"
 #include "afxdialogex.h"
 
+#include "../SpeechAPI/tts.h"
+#include "../SpeechAPI/asr.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -431,6 +434,8 @@ void CTestUIDlg::UpdateAdviceSkeleton() {
 	m_poseMatcher.weightedPoseMatching(inskel, fbjoints, action, m_bAdviceFront, &feedback, &fitpose);
 
 	m_oglWindow.oglSetAdviceSkeleton(fitpose);
+
+	speech_feedback(fbjoints, feedback);
 }
 
 
