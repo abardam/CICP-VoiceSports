@@ -59,6 +59,7 @@ private:
 
 	std::vector<Sport> m_sports;
 	int m_current_sport;
+	bool m_bAdviceFront;
 
 	Kinect2Manager m_kinectManager;
 	PoseMatcher m_poseMatcher;
@@ -87,4 +88,6 @@ public:
 	afx_msg void OnBnClickedCheck14();
 	afx_msg void OnBnClickedCheck15();
 	afx_msg void OnCbnSelchangeCombo2();
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton1();
 };

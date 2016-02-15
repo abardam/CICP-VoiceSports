@@ -90,6 +90,8 @@ ON_BN_CLICKED(IDC_CHECK13, &CTestUIDlg::OnBnClickedCheck13)
 ON_BN_CLICKED(IDC_CHECK14, &CTestUIDlg::OnBnClickedCheck14)
 ON_BN_CLICKED(IDC_CHECK15, &CTestUIDlg::OnBnClickedCheck15)
 ON_CBN_SELCHANGE(IDC_COMBO2, &CTestUIDlg::OnCbnSelchangeCombo2)
+ON_BN_CLICKED(IDC_BUTTON2, &CTestUIDlg::OnBnClickedButton2)
+ON_BN_CLICKED(IDC_BUTTON1, &CTestUIDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -209,6 +211,8 @@ BOOL CTestUIDlg::OnInitDialog()
 		s2.assign(s.name.begin(), s.name.end());
 		m_sport_cb->AddString(s2.c_str());
 	}
+
+	m_bAdviceFront = true;
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -424,7 +428,7 @@ void CTestUIDlg::UpdateAdviceSkeleton() {
 
 	posskeleton feedback;
 	posskeleton fitpose;
-	m_poseMatcher.weightedPoseMatching(inskel, fbjoints, action, true, &feedback, &fitpose);
+	m_poseMatcher.weightedPoseMatching(inskel, fbjoints, action, m_bAdviceFront, &feedback, &fitpose);
 
 	m_oglWindow.oglSetAdviceSkeleton(fitpose);
 }
@@ -558,5 +562,19 @@ void CTestUIDlg::OnBnClickedCheck15()
 
 void CTestUIDlg::OnCbnSelchangeCombo2()
 {
+	UpdateAdviceSkeleton();
+}
+
+
+void CTestUIDlg::OnBnClickedButton2()
+{
+	m_bAdviceFront = false;
+	UpdateAdviceSkeleton();
+}
+
+
+void CTestUIDlg::OnBnClickedButton1()
+{
+	m_bAdviceFront = true;
 	UpdateAdviceSkeleton();
 }
