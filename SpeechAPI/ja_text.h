@@ -1,30 +1,31 @@
-#pragma once
+﻿#pragma once
 #ifndef BODY_PART_JA_H
 #define BODY_PART_JA_H
 #include <vector>
 
-#define HEAD_NAME L" head "
-#define NECK_NAME L" neck "
-#define LSHOULDER_NAME L" left shoulder "
-#define LELBOW_NAME L" left elbow "
-#define LHAND_NAME L" left hand "
-#define RSHOULDER_NAME L" right shoulder "
-#define RELBOW_NAME L" right elbow "
-#define RHAND_NAME L" right hand "
-#define TORSO_NAME L" torso "
-#define LHIP_NAME L" left hip "
-#define LKNEE_NAME L" left knee "
-#define LFOOT_NAME L" left foot "
-#define RHIP_NAME L" right hip "
-#define RKNEE_NAME L" right knee "
-#define RFOOT_NAME L" right foot "
-#define BACKWARD L" backward "
-#define FORWARD L" forward "
-#define TO_THE_LEFT L" to the left "
-#define TO_THE_RIGHT L" to the right "
-#define UP L" up "
-#define DOWN L" down "
-std::vector<std::wstring> FB_GOOD_POS = { L"You have perfect position", L"You've done a great job",
-L"That's perfect" };
-std::vector<std::wstring> FB_WRONG_BEGIN = { L"You need to move your" };
+#define HEAD_NAME L"頭"
+#define NECK_NAME L"首"
+#define LSHOULDER_NAME L"左肩"
+#define LELBOW_NAME L"左肘"
+#define LHAND_NAME L"左手"
+#define RSHOULDER_NAME L"右肩"
+#define RELBOW_NAME L"右肘"
+#define RHAND_NAME L"右手"
+#define TORSO_NAME L"胴体"
+#define LHIP_NAME L"左股関節"
+#define LKNEE_NAME L"左膝"
+#define LFOOT_NAME L"左足"
+#define RHIP_NAME L"右股関節"
+#define RKNEE_NAME L"右膝"
+#define RFOOT_NAME L"右足"
+#define BACKWARD L"前へ"
+#define FORWARD L"後ろへ"
+#define TO_THE_LEFT L"左に"
+#define TO_THE_RIGHT L"右に"
+#define UP L"上"
+#define DOWN L"下"
+std::vector<std::wstring> FB_GOOD_POS = { L"あなたは完璧な位置を持っています", L"あなたは素晴らしい仕事をしてきました",
+L"それは最高だ"};
+std::vector<std::wstring> FB_WRONG_BEGIN = { L"あなたの"};
+std::vector<std::wstring> FB_WRONG_END = { L"を動かしてください" };
 #endif

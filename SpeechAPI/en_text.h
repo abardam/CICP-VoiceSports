@@ -28,4 +28,5 @@ std::vector<std::wstring> FB_GOOD_POS = { L"You have perfect position", L"You've
 L"that's perfect" };
 std::vector<std::wstring> FB_WRONG_BEGIN = { L"You need to move your",
 											 L"that's wrong, please move your"};
+std::vector<std::wstring> FB_WRONG_END = { L"" };
 #endif

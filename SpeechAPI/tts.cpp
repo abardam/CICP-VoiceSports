@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "tts.h"
-#include "en_text.h"
+#include "ja_text.h"
 #include "UtilsHAR.h"
 #include <random>
 #include <iostream>
@@ -23,9 +23,9 @@ Iter select_randomly(Iter start, Iter end) {
 
 void tts(std::wstring &text) {
 	// Japanese
-	//std::wstring newtext = L"<LANG LANGID=\"411\">";
+	std::wstring newtext = L"<LANG LANGID=\"411\">";
 	// English
-	std::wstring newtext = L"<LANG LANGID=\"409\">";
+	//std::wstring newtext = L"<LANG LANGID=\"409\">";
 	newtext.append(text);
 	newtext.append(L"</LANG>");
 	LPCWSTR stext = (LPCWSTR)newtext.c_str();
@@ -113,7 +113,7 @@ std::wstring double2ws(double a) {
 	double num = abs(a);
 	ws << num;
 	std::wstring s(ws.str());
-	s.append(L" centimet ");
+	s.append(L"cm");
 	return s;
 }
 
@@ -122,7 +122,7 @@ std::wstring int2ws(int a) {
 	int num = abs(a);
 	ws << num;
 	std::wstring s(ws.str());
-	s.append(L" centimet ");
+	s.append(L"cm");
 	return s;
 }
 
@@ -165,6 +165,9 @@ void feedback_body_part(BODY_PART bp, const fbskeleton& fbskel, const posskeleto
 			else
 				res.append(UP);
 		} 
+
+		std::wstring res_end = *select_randomly(FB_WRONG_END.begin(), FB_WRONG_END.end());
+		res.append(res_end);
 	}
 
 	if (!res.empty()) {
