@@ -195,6 +195,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="antonio_skeleton_util.h" />
     <ClInclude Include="OpenGLControl.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="rgbquad_util.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="TestUIDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="antonio_skeleton_util.cpp" />
     <ClCompile Include="OpenGLControl.cpp" />
     <ClCompile Include="rgbquad_util.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -225,8 +227,14 @@
     <Image Include="res\TestUI.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\KinectRead\KinectRead.vcxproj">
+    <ProjectReference Include="..\CICP-ActionTemplates\CICP-ActionTemplates.vcxproj">
+      <Project>{4d0d1812-8059-4816-b55d-3b7ac028caf5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\KinectRead\KinectRead.vcxproj">
       <Project>{38261b44-ae5e-4012-a2ef-768c984d1fb6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SpeechAPI\ConsoleApplication1.vcxproj">
+      <Project>{68d3417f-31b4-4397-86ab-54478d7acfa5}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

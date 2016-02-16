@@ -3,7 +3,8 @@
 #include <gl\GL.h>
 #include <gl\GLU.h>
 
-#include "..\..\KinectRead\Kinect2Manager.h"
+#include "../KinectRead/Kinect2Manager.h"
+#include "../CICP-ActionTemplates/PoseMatcher.h"
 
 class COpenGLControl :
 	public CWnd
@@ -15,6 +16,7 @@ public:
 	void oglCreate(CRect rect, CWnd *parent);
 	void oglSetTexture(RGBQUAD * img, int width, int height);
 	void oglSetKinect(Kinect2Manager * kinect_manager);
+	void oglSetAdviceSkeleton(const posskeleton& skeleton);
 
 	UINT_PTR m_unpTimer;
 
@@ -42,6 +44,9 @@ private:
 
 	GLuint m_texture;
 	Kinect2Manager * m_kinectManager;
+
+	posskeleton m_adviceSkeleton;
+	bool m_bHasAdviceSkeleton;
 
 	void oglInitialize();
 	void oglDrawScene();

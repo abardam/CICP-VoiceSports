@@ -7,14 +7,18 @@
 #include "TestUIDlg.h"
 #include "afxdialogex.h"
 
+#include "../SpeechAPI/tts.h"
+#include "../SpeechAPI/asr.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 #include "rgbquad_util.h"
+#include "antonio_skeleton_util.h"
 
 // KINECT: include KinectRead project
-#include "..\..\KinectRead\Kinect2Manager.h"
+#include "..\KinectRead\Kinect2Manager.h"
 
 // KINECT: declaration for thread loop function
 UINT KinectRefreshProc(LPVOID pParam);
@@ -73,6 +77,24 @@ BEGIN_MESSAGE_MAP(CTestUIDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 //	ON_WM_ERASEBKGND()
 ON_CBN_SELCHANGE(IDC_COMBO1, &CTestUIDlg::OnCbnSelchangeCombo1)
+ON_BN_CLICKED(IDC_CHECK1, &CTestUIDlg::OnBnClickedCheck1)
+ON_BN_CLICKED(IDC_CHECK2, &CTestUIDlg::OnBnClickedCheck2)
+ON_BN_CLICKED(IDC_CHECK3, &CTestUIDlg::OnBnClickedCheck3)
+ON_BN_CLICKED(IDC_CHECK4, &CTestUIDlg::OnBnClickedCheck4)
+ON_BN_CLICKED(IDC_CHECK5, &CTestUIDlg::OnBnClickedCheck5)
+ON_BN_CLICKED(IDC_CHECK6, &CTestUIDlg::OnBnClickedCheck6)
+ON_BN_CLICKED(IDC_CHECK7, &CTestUIDlg::OnBnClickedCheck7)
+ON_BN_CLICKED(IDC_CHECK8, &CTestUIDlg::OnBnClickedCheck8)
+ON_BN_CLICKED(IDC_CHECK9, &CTestUIDlg::OnBnClickedCheck9)
+ON_BN_CLICKED(IDC_CHECK10, &CTestUIDlg::OnBnClickedCheck10)
+ON_BN_CLICKED(IDC_CHECK11, &CTestUIDlg::OnBnClickedCheck11)
+ON_BN_CLICKED(IDC_CHECK12, &CTestUIDlg::OnBnClickedCheck12)
+ON_BN_CLICKED(IDC_CHECK13, &CTestUIDlg::OnBnClickedCheck13)
+ON_BN_CLICKED(IDC_CHECK14, &CTestUIDlg::OnBnClickedCheck14)
+ON_BN_CLICKED(IDC_CHECK15, &CTestUIDlg::OnBnClickedCheck15)
+ON_CBN_SELCHANGE(IDC_COMBO2, &CTestUIDlg::OnCbnSelchangeCombo2)
+ON_BN_CLICKED(IDC_BUTTON2, &CTestUIDlg::OnBnClickedButton2)
+ON_BN_CLICKED(IDC_BUTTON1, &CTestUIDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -113,7 +135,40 @@ BOOL CTestUIDlg::OnInitDialog()
 	//m_maindisplay = (CStatic*)GetDlgItem(IDC_MAINDISPLAY); // this is the ID that we set in the dialog view
 	m_sport_cb = (CComboBox*)GetDlgItem(IDC_COMBO1);
 	m_action_cb = (CComboBox*)GetDlgItem(IDC_COMBO2);
-													
+
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK1));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK2));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK3));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK4));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK5));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK6));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK7));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK8));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK9));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK10));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK11));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK12));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK13));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK14));
+	m_bodypartCheckBoxes.push_back((CButton *)GetDlgItem(IDC_CHECK15));
+
+	//populate kinect joint map
+	//UPDATE: moved to UtilsHAR.cpp
+	/*m_kinectJointMap[HEAD] = JointType_Head;
+	m_kinectJointMap[NECK] = JointType_Neck;
+	m_kinectJointMap[LSHOULDER] = JointType_ShoulderLeft;
+	m_kinectJointMap[LELBOW] = JointType_ElbowLeft;
+	m_kinectJointMap[LHAND] = JointType_HandLeft;
+	m_kinectJointMap[RSHOULDER] = JointType_ShoulderRight;
+	m_kinectJointMap[RELBOW] = JointType_ElbowRight;
+	m_kinectJointMap[RHAND] = JointType_HandRight;
+	m_kinectJointMap[TORSO] = JointType_SpineMid;
+	m_kinectJointMap[LHIP] = JointType_HipLeft;
+	m_kinectJointMap[LKNEE] = JointType_KneeLeft;
+	m_kinectJointMap[LFOOT] = JointType_FootLeft;
+	m_kinectJointMap[RHIP] = JointType_HipRight;
+	m_kinectJointMap[RKNEE] = JointType_KneeRight;
+	m_kinectJointMap[RFOOT] = JointType_FootRight;*/
 
 	//new style with OpenGL
 	CRect rect;
@@ -140,7 +195,11 @@ BOOL CTestUIDlg::OnInitDialog()
 	// init sports
 	Sport kendo_sp;
 	kendo_sp.name = "Kendo";
+	kendo_sp.actions.push_back("Jodan");
 	kendo_sp.actions.push_back("Kamae");
+	kendo_sp.actions.push_back("Sonkyo");
+	kendo_sp.actions.push_back("Suburi");
+	kendo_sp.actions.push_back("Tsubazeriai");
 
 	Sport tennis_sp;
 	tennis_sp.name = "Tennis";
@@ -155,6 +214,8 @@ BOOL CTestUIDlg::OnInitDialog()
 		s2.assign(s.name.begin(), s.name.end());
 		m_sport_cb->AddString(s2.c_str());
 	}
+
+	m_bAdviceFront = true;
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -233,6 +294,7 @@ void CTestUIDlg::InitKinect() {
 }
 
 // KINECT: this is what is called repeatedly in the thread in order to update the picture box
+// UPDATE: do not use this function. all updates will be handled within the opengl control itself.
 
 void CTestUIDlg::ShowKinect()
 {
@@ -326,6 +388,55 @@ void CTestUIDlg::ShowKinect()
 
 }
 
+void CTestUIDlg::ClickBodyPartCheckBox() {
+	UpdateAdviceSkeleton();
+}
+
+void CTestUIDlg::UpdateAdviceSkeleton() {
+	posskeleton inskel;
+	if (m_kinectManager.getSkeletonIsGood()) {
+		Joint * jptr = m_kinectManager.GetJoints();
+		int * kinectJointMap = getKinectJointMap();
+
+		for (int j = 0; j < NUM_JOINTS; ++j)
+		{
+			inskel.positions[j].rightleft = jptr[kinectJointMap[j]].Position.X;
+			inskel.positions[j].updown = jptr[kinectJointMap[j]].Position.Y;
+			inskel.positions[j].fwdbwd = jptr[kinectJointMap[j]].Position.Z;
+			inskel.confidences[j] = jptr[kinectJointMap[j]].TrackingState;
+		}
+
+	}
+	else {
+		//shitty test data
+		for (int j = 0; j < NUM_JOINTS; ++j) {
+			inskel.positions[j].rightleft = 0;
+			inskel.positions[j].updown = 0;
+			inskel.positions[j].fwdbwd = 0;
+			inskel.confidences[j] = 1;
+		}
+	}
+
+	fbskeleton fbjoints;
+	for (int i = 0; i < NUM_JOINTS; ++i) {
+		fbjoints.needsCheck[i] = m_bodypartCheckBoxes[i]->GetCheck();
+	}
+
+	int action;
+	action = m_action_cb->GetCurSel();
+
+	if (action < 0) {
+		return;
+	}
+
+	posskeleton feedback;
+	posskeleton fitpose;
+	m_poseMatcher.weightedPoseMatching(inskel, fbjoints, action, m_bAdviceFront, &feedback, &fitpose);
+
+	m_oglWindow.oglSetAdviceSkeleton(fitpose);
+
+	speech_feedback(fbjoints, feedback);
+}
 
 
 //BOOL CTestUIDlg::OnEraseBkgnd(CDC* pDC)
@@ -347,4 +458,128 @@ void CTestUIDlg::OnCbnSelchangeCombo1()
 		m_action_cb->AddString(s2.c_str());
 
 	}
+}
+
+
+void CTestUIDlg::OnBnClickedCheck1()
+{
+	ClickBodyPartCheckBox();
+}
+
+
+void CTestUIDlg::OnBnClickedCheck2()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck3()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck4()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck5()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck6()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck7()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck8()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck9()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck10()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck11()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck12()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck13()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck14()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnBnClickedCheck15()
+{
+	ClickBodyPartCheckBox();
+
+}
+
+
+void CTestUIDlg::OnCbnSelchangeCombo2()
+{
+	UpdateAdviceSkeleton();
+}
+
+
+void CTestUIDlg::OnBnClickedButton2()
+{
+	m_bAdviceFront = false;
+	UpdateAdviceSkeleton();
+}
+
+
+void CTestUIDlg::OnBnClickedButton1()
+{
+	m_bAdviceFront = true;
+	UpdateAdviceSkeleton();
 }

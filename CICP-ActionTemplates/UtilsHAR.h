@@ -1,3 +1,8 @@
+#pragma once
+
+#ifndef UTILS_HAR_H
+#define UTILS_HAR_H
+
 /*Useful variables for human action recognition*/
 #include <vector>
 #include <array>
@@ -8,7 +13,7 @@
 
 #define NUM_COORD 3	// Number of coordinates in each joint position (3D: x-y-z)
 
-// The order of the joints in the array is:
+/*// The order of the joints in the array is:
 #define HEAD 0
 #define NECK 1
 #define LSHOULDER 2
@@ -24,6 +29,12 @@
 #define RHIP 12
 #define RKNEE 13
 #define RFOOT 14
+*/
+enum BODY_PART {
+	HEAD, NECK, LSHOULDER, LELBOW, LHAND,
+	RSHOULDER, RELBOW, RHAND, TORSO, LHIP,
+	LKNEE, LFOOT, RHIP, RKNEE, RFOOT
+};
 
 struct fbskeleton {
 	bool needsCheck[NUM_JOINTS];
@@ -45,3 +56,5 @@ struct actskeleton {
 	//std::vector<std::array<bool, NUM_JOINTS> > confidences_a;
 	std::vector < posskeleton > poses;
 };
+
+#endif

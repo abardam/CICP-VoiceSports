@@ -1,3 +1,4 @@
+#pragma once
 #include "SkeletonReader.h"
 
 #define NUM_POSES 5	// Number of poses in our dataset
@@ -15,13 +16,13 @@ class PoseMatcher
 public:
 	PoseMatcher();
 	~PoseMatcher();
-	void weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action, posskeleton* feedback, posskeleton* fitpose);
+	void weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action, bool frontal, posskeleton* feedback, posskeleton* fitpose);
 
 private:
 	void normalizeSkeleton(posskeleton* skel);
 	bool isFrontOrSide(posskeleton skel);
 	double calculateHeight(posskeleton inskel);
-	int fitSkeleton(posskeleton inskel, int action);
+	int fitSkeleton(posskeleton inskel, int action, bool frontal);
 
 	posskeleton posedataset[NUM_POSES][NUM_ACTORS];
 

@@ -4,9 +4,11 @@
 
 #pragma once
 
-#include "../../KinectRead/Kinect2Manager.h"
+#include "../KinectRead/Kinect2Manager.h"
 #include <vector>
 #include "OpenGLControl.h"
+#include "../CICP-ActionTemplates/UtilsHAR.h"
+#include "../CICP-ActionTemplates/PoseMatcher.h"
 
 struct Sport {
 	std::string name;
@@ -42,11 +44,14 @@ protected:
 
 public:
 	void ShowKinect();
+	void ClickBodyPartCheckBox();
+	void UpdateAdviceSkeleton();
 	void InitKinect();
 
 private:
 	//CStatic * m_maindisplay;
 	COpenGLControl m_oglWindow;
+	std::vector<CButton *> m_bodypartCheckBoxes;
 
 	CComboBox * m_sport_cb;
 	CComboBox * m_action_cb;
@@ -54,11 +59,35 @@ private:
 
 	std::vector<Sport> m_sports;
 	int m_current_sport;
+	bool m_bAdviceFront;
 
 	Kinect2Manager m_kinectManager;
+	PoseMatcher m_poseMatcher;
+
+	// corresponding kinect joint for each "Antonio joint"
+	//UPDATE: moved to UtilsHAR.cpp
+	//int m_kinectJointMap[NUM_JOINTS];
 
 public:
 //	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 
 	afx_msg void OnCbnSelchangeCombo1();
+	afx_msg void OnBnClickedCheck1();
+	afx_msg void OnBnClickedCheck2();
+	afx_msg void OnBnClickedCheck3();
+	afx_msg void OnBnClickedCheck4();
+	afx_msg void OnBnClickedCheck5();
+	afx_msg void OnBnClickedCheck6();
+	afx_msg void OnBnClickedCheck7();
+	afx_msg void OnBnClickedCheck8();
+	afx_msg void OnBnClickedCheck9();
+	afx_msg void OnBnClickedCheck10();
+	afx_msg void OnBnClickedCheck11();
+	afx_msg void OnBnClickedCheck12();
+	afx_msg void OnBnClickedCheck13();
+	afx_msg void OnBnClickedCheck14();
+	afx_msg void OnBnClickedCheck15();
+	afx_msg void OnCbnSelchangeCombo2();
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton1();
 };
