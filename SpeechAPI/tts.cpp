@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "stdafx.h"
 #include "tts.h"
 #include "ja_text.h"
@@ -21,18 +21,27 @@ Iter select_randomly(Iter start, Iter end) {
 	return select_randomly(start, end, gen);
 }
 
-void tts(std::wstring &text) {
+DWORD WINAPI myThread(LPVOID lpParameter)
+{
+	unsigned int& myCounter = *((unsigned int*)lpParameter);
+	while (myCounter < 0xFFFFFFFF) ++myCounter;
+	return 0;
+}
+
+DWORD WINAPI tts(LPVOID lpParameter) {
+	std::wstring* text = ((std::wstring*)lpParameter);
+	
 	// Japanese
 	std::wstring newtext = L"<LANG LANGID=\"411\">";
 	// English
 	//std::wstring newtext = L"<LANG LANGID=\"409\">";
-	newtext.append(text);
+	newtext.append(*text);
 	newtext.append(L"</LANG>");
 	LPCWSTR stext = (LPCWSTR)newtext.c_str();
 	ISpVoice * pVoice = NULL;
 
 	if (FAILED(::CoInitialize(NULL)))
-		return;
+		return 0;
 
 	HRESULT hr = CoCreateInstance(CLSID_SpVoice, NULL, CLSCTX_ALL, IID_ISpVoice, (void **)&pVoice);
 
@@ -127,7 +136,7 @@ std::wstring int2ws(int a) {
 }
 
 void feedback_body_part(BODY_PART bp, const fbskeleton& fbskel, const posskeleton& posskel) {
-	if (!fbskel.needsCheck[bp]) {
+	if (fbskel.needsCheck[bp] != true) {
 		return;
 	}
 	std::wstring res = L"";
@@ -166,12 +175,13 @@ void feedback_body_part(BODY_PART bp, const fbskeleton& fbskel, const posskeleto
 				res.append(UP);
 		} 
 
-		std::wstring res_end = *select_randomly(FB_WRONG_END.begin(), FB_WRONG_END.end());
-		res.append(res_end);
+		if (!res.empty()) {
+			std::wstring res_end = *select_randomly(FB_WRONG_END.begin(), FB_WRONG_END.end());
+			res.append(res_end);
+		}
 	}
-
 	if (!res.empty()) {
-		tts(res);
+		CreateThread(NULL, 0, tts, new std::wstring(res), 0, 0);
 	}
 }
 
