@@ -23,6 +23,7 @@ private:
 	bool isFrontOrSide(posskeleton skel);
 	double calculateHeight(posskeleton inskel);
 	int fitSkeleton(posskeleton inskel, int action, bool frontal);
+	int filtervalue(double raw);
 
 	posskeleton posedataset[NUM_POSES][NUM_ACTORS];
 

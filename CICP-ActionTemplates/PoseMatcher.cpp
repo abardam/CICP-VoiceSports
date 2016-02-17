@@ -64,7 +64,7 @@ PoseMatcher::PoseMatcher()
 			// Normalize skeleton
 			this->normalizeSkeleton(&(posedataset[p][a]));
 			// Calculate the height of the actor
-			heightdataset[p][a] = calculateHeight(posedataset[p][a]);
+			heightdataset[p][a] = this->calculateHeight(posedataset[p][a]);
 		}
 	}
 }
@@ -108,14 +108,11 @@ double PoseMatcher::calculateHeight(posskeleton inskel)
 
 int PoseMatcher::fitSkeleton(posskeleton inskel, int action, bool frontal)
 {
-	// Normalize the skeleton with respect to the center
-	this->normalizeSkeleton(&inskel);
-
 	// Check if the skeleton is frontal or lateral
-	//bool frontal = isFrontOrSide(inskel);
+	//bool frontal = this->isFrontOrSide(inskel);
 
 	// Choose the most appropriate user/skeleton (height)
-	double heightskel = calculateHeight(inskel);
+	double heightskel = this->calculateHeight(inskel);
 
 	int user = 0;
 	double diff = 2000;
@@ -145,8 +142,11 @@ int PoseMatcher::fitSkeleton(posskeleton inskel, int action, bool frontal)
 
 void PoseMatcher::weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, int action, bool frontal, posskeleton* feedback, posskeleton* fitpose)
 {
+	// Normalize the skeleton with respect to the center
+	this->normalizeSkeleton(&inskel);
+
 	// USER + ACTION + FRONTAL = COMPARABLE SKELETON
-	int user = fitSkeleton(inskel, action, frontal);
+	int user = this->fitSkeleton(inskel, action, frontal);
 	posskeleton compskel = posedataset[action][user];
 
 	// Calculate the feedback for each joint
@@ -154,9 +154,12 @@ void PoseMatcher::weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, 
 	{
 		if (fbjoints.needsCheck[j])
 		{
-			feedback->positions[j].rightleft = inskel.positions[j].rightleft - compskel.positions[j].rightleft;
-			feedback->positions[j].updown = inskel.positions[j].updown - compskel.positions[j].updown;
-			feedback->positions[j].fwdbwd = inskel.positions[j].fwdbwd - compskel.positions[j].fwdbwd;
+			feedback->positions[j].rightleft = this->filtervalue(inskel.positions[j].rightleft - compskel.positions[j].rightleft);
+			feedback->positions[j].updown = this->filtervalue(inskel.positions[j].updown - compskel.positions[j].updown);
+			feedback->positions[j].fwdbwd = this->filtervalue(inskel.positions[j].fwdbwd - compskel.positions[j].fwdbwd);
+			//feedback->positions[j].rightleft = inskel.positions[j].rightleft - compskel.positions[j].rightleft;
+			//feedback->positions[j].updown = inskel.positions[j].updown - compskel.positions[j].updown;
+			//feedback->positions[j].fwdbwd = inskel.positions[j].fwdbwd - compskel.positions[j].fwdbwd;
 		}
 		else
 		{
@@ -167,4 +170,16 @@ void PoseMatcher::weightedPoseMatching(posskeleton inskel, fbskeleton fbjoints, 
 	}
 
 	*fitpose = compskel;
+}
+
+int PoseMatcher::filtervalue(double raw)
+{
+	int filtered = (int)(raw * 100);
+
+	if (filtered < 4)
+	{
+		filtered = 0;
+	}
+
+	return filtered;
 }

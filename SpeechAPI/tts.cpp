@@ -162,9 +162,9 @@ void feedback_body_part(BODY_PART bp, const fbskeleton& fbskel, const posskeleto
 		if (rightleft != 0) {
 			res.append(double2ws(rightleft));
 			if (rightleft > 0)
-				res.append(TO_THE_RIGHT);
-			else 
 				res.append(TO_THE_LEFT);
+			else 
+				res.append(TO_THE_RIGHT);
 		}
 
 		if (updown != 0) {
