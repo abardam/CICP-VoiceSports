@@ -588,7 +588,7 @@ void CTestUIDlg::OnBnClickedButton1()
 
 void CTestUIDlg::OnBnClickedButtonSpeech()
 {
-	//TRUONG, LOOK HERE BROTHER
+	//TRUONG, 👀 LOOK HERE BROTHER 👀
 	bool GetSpeechIsActive = true;
 	bool SetSpeechActive;
 	bool SetSpeechInactive;
