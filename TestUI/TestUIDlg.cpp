@@ -95,6 +95,7 @@ ON_BN_CLICKED(IDC_CHECK15, &CTestUIDlg::OnBnClickedCheck15)
 ON_CBN_SELCHANGE(IDC_COMBO2, &CTestUIDlg::OnCbnSelchangeCombo2)
 ON_BN_CLICKED(IDC_BUTTON2, &CTestUIDlg::OnBnClickedButton2)
 ON_BN_CLICKED(IDC_BUTTON1, &CTestUIDlg::OnBnClickedButton1)
+ON_BN_CLICKED(IDC_BUTTON_SPEECH, &CTestUIDlg::OnBnClickedButtonSpeech)
 END_MESSAGE_MAP()
 
 
@@ -582,4 +583,20 @@ void CTestUIDlg::OnBnClickedButton1()
 {
 	m_bAdviceFront = true;
 	UpdateAdviceSkeleton();
+}
+
+
+void CTestUIDlg::OnBnClickedButtonSpeech()
+{
+	//TRUONG, LOOK HERE BROTHER
+	bool GetSpeechIsActive = true;
+	bool SetSpeechActive;
+	bool SetSpeechInactive;
+
+	if (GetSpeechIsActive) {
+		SetSpeechInactive;
+	}
+	else {
+		SetSpeechActive;
+	}
 }
