@@ -36,9 +36,6 @@
     <ClInclude Include="asr_native.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UtilsHAR.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="en_text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
