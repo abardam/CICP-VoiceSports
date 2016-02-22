@@ -96,6 +96,7 @@ ON_CBN_SELCHANGE(IDC_COMBO2, &CTestUIDlg::OnCbnSelchangeCombo2)
 ON_BN_CLICKED(IDC_BUTTON2, &CTestUIDlg::OnBnClickedButton2)
 ON_BN_CLICKED(IDC_BUTTON1, &CTestUIDlg::OnBnClickedButton1)
 ON_BN_CLICKED(IDC_BUTTON_SPEECH, &CTestUIDlg::OnBnClickedButtonSpeech)
+ON_BN_CLICKED(IDC_BUTTON3, &CTestUIDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -393,7 +394,7 @@ void CTestUIDlg::ShowKinect()
 }
 
 void CTestUIDlg::ClickBodyPartCheckBox() {
-	UpdateAdviceSkeleton();
+	//UpdateAdviceSkeleton();
 }
 
 void CTestUIDlg::UpdateAdviceSkeleton() {
@@ -606,4 +607,10 @@ void CTestUIDlg::OnBnClickedButtonSpeech()
 		m_start_recording->SetWindowTextW(L"Stop recording");
 		m_bSpeechIsActive = true;
 	}
+}
+
+
+void CTestUIDlg::OnBnClickedButton3()
+{
+	UpdateAdviceSkeleton();
 }
