@@ -55,7 +55,9 @@ private:
 
 	CComboBox * m_sport_cb;
 	CComboBox * m_action_cb;
+	CButton * m_start_recording;
 	int m_width, m_height;
+	bool m_bSpeechIsActive;
 
 	std::vector<Sport> m_sports;
 	int m_current_sport;

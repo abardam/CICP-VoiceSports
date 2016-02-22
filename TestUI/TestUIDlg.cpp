@@ -132,6 +132,9 @@ BOOL CTestUIDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 
+	m_start_recording = (CButton*)GetDlgItem(IDC_BUTTON_SPEECH);
+	m_bSpeechIsActive = false;
+
 	// KINECT: set picture control variable so we can change the picture
 	//m_maindisplay = (CStatic*)GetDlgItem(IDC_MAINDISPLAY); // this is the ID that we set in the dialog view
 	m_sport_cb = (CComboBox*)GetDlgItem(IDC_COMBO1);
@@ -589,14 +592,18 @@ void CTestUIDlg::OnBnClickedButton1()
 void CTestUIDlg::OnBnClickedButtonSpeech()
 {
 	//TRUONG, 👀 LOOK HERE BROTHER 👀
-	bool GetSpeechIsActive = true;
+	bool GetSpeechIsActive = m_bSpeechIsActive;
 	bool SetSpeechActive;
 	bool SetSpeechInactive;
 
 	if (GetSpeechIsActive) {
 		SetSpeechInactive;
+		m_start_recording->SetWindowTextW(L"Start recording");
+		m_bSpeechIsActive = false;
 	}
 	else {
 		SetSpeechActive;
+		m_start_recording->SetWindowTextW(L"Stop recording");
+		m_bSpeechIsActive = true;
 	}
 }
