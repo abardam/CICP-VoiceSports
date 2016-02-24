@@ -7,8 +7,12 @@
 #include "../KinectRead/Kinect2Manager.h"
 #include <vector>
 #include "OpenGLControl.h"
+
 #include "../CICP-ActionTemplates/UtilsHAR.h"
 #include "../CICP-ActionTemplates/PoseMatcher.h"
+
+#include "../wit_nlu/wit_lib.h"
+#include "../wit_nlu/dict.h"
 
 struct Sport {
 	std::string name;
@@ -65,6 +69,10 @@ private:
 
 	Kinect2Manager m_kinectManager;
 	PoseMatcher m_poseMatcher;
+
+	// Variables for the NLU module
+	dict *m_dict;
+	WitLib *m_witlib;
 
 	// corresponding kinect joint for each "Antonio joint"
 	//UPDATE: moved to UtilsHAR.cpp

@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpeechAPI", "..\SpeechAPI\ConsoleApplication1.vcxproj", "{68D3417F-31B4-4397-86AB-54478D7ACFA5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wit_nlu", "..\wit_nlu\wit_nlu.vcxproj", "{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -76,6 +78,14 @@ Global
 		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Release|x64.Build.0 = Release|x64
 		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Release|x86.ActiveCfg = Release|Win32
 		{68D3417F-31B4-4397-86AB-54478D7ACFA5}.Release|x86.Build.0 = Release|Win32
+		{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}.Debug|x64.ActiveCfg = Debug|x64
+		{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}.Debug|x64.Build.0 = Debug|x64
+		{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}.Debug|x86.ActiveCfg = Debug|Win32
+		{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}.Debug|x86.Build.0 = Debug|Win32
+		{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}.Release|x64.ActiveCfg = Release|x64
+		{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}.Release|x64.Build.0 = Release|x64
+		{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}.Release|x86.ActiveCfg = Release|Win32
+		{A531B6B7-F8DB-4692-AA16-227B44C2EFC3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
