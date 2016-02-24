@@ -11,6 +11,9 @@
 #include "../CICP-ActionTemplates/UtilsHAR.h"
 #include "../CICP-ActionTemplates/PoseMatcher.h"
 
+#include "../SpeechAPI/tts.h"
+#include "../SpeechAPI/asr.h"
+
 #include "../wit_nlu/wit_lib.h"
 #include "../wit_nlu/dict.h"
 
@@ -30,6 +33,11 @@ public:
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_TESTUI_DIALOG };
 #endif
+
+	// Variables for the speech API
+	voicesport::SpeechKit speechkit;
+	void onFinalResult(std::string text);
+
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
@@ -73,6 +81,7 @@ private:
 	// Variables for the NLU module
 	dict *m_dict;
 	WitLib *m_witlib;
+
 
 	// corresponding kinect joint for each "Antonio joint"
 	//UPDATE: moved to UtilsHAR.cpp

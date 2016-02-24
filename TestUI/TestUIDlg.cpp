@@ -7,13 +7,9 @@
 #include "TestUIDlg.h"
 #include "afxdialogex.h"
 
-#include "../SpeechAPI/tts.h"
-#include "../SpeechAPI/asr.h"
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
 #include "rgbquad_util.h"
 #include "antonio_skeleton_util.h"
 
@@ -22,6 +18,20 @@
 
 // KINECT: declaration for thread loop function
 UINT KinectRefreshProc(LPVOID pParam);
+
+void CTestUIDlg::onFinalResult(std::string text)
+{
+	std::cout << "ASR RESULT: " << text;
+
+	std::string en = m_dict->getEn(text);
+	fbskeleton sk = m_witlib->getJoints(en);
+
+	for (int i = 0; i < NUM_JOINTS; ++i) {
+		m_bodypartCheckBoxes[i]->SetCheck(sk.needsCheck[i]);
+	}
+
+	UpdateAdviceSkeleton();
+}
 
 // CAboutDlg dialog used for App About
 
@@ -63,10 +73,11 @@ CTestUIDlg::CTestUIDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_TESTUI_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
+	
+	speechkit = voicesport::SpeechKit();
+	
 	//initialize the japanese-english map
 	m_dict = new dict();
-
 	//initialize the NLU component
 	m_witlib = new WitLib();
 }
@@ -606,22 +617,17 @@ void CTestUIDlg::OnBnClickedButtonSpeech()
 		SetSpeechInactive;
 		m_start_recording->SetWindowTextW(L"Start recording");
 		m_bSpeechIsActive = false;
+
+		speechkit.stopASR();
 	}
 	else {
 		SetSpeechActive;
 		m_start_recording->SetWindowTextW(L"Stop recording");
 		m_bSpeechIsActive = true;
 
-		std::string en = m_dict->getEn(u8"足 は 今 大丈夫 です か");
-		fbskeleton sk = m_witlib->getJoints(en);
-
-		m_sport_cb->SetCurSel(1);
-		m_action_cb->SetCurSel(1);
-		for (int i = 0; i < NUM_JOINTS; ++i) {
-			m_bodypartCheckBoxes[i]->SetCheck(sk.needsCheck[i]);
+		if (!speechkit.startASR()) {
+			std::cout << "ASR not available";
 		}
-
-		UpdateAdviceSkeleton();
 	}
 }
 

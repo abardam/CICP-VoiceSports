@@ -77,7 +77,9 @@ BOOL CTestUIApp::InitInstance()
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
 	CTestUIDlg dlg;
+
 	m_pMainWnd = &dlg;
+	dlg.speechkit.connectOnFinalResult(makeFunctor((CBFunctor1<std::string> *)0, dlg, &CTestUIDlg::onFinalResult));
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
