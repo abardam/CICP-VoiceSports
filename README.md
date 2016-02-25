@@ -24,5 +24,7 @@ After installing the SDK, the environment variables KINECTSDK2_INCLUDE and KINEC
 python -m pip install pyaudio
 python -m pip install ws4py==0.3.2
 python -m pip install git+https://truongdq@bitbucket.org/truongdq/python_kaldi_client.git
+python -m pip install SpeechRecognition
+python -m pip install requests
 ```
 5. Run Tools/ASR/simple-asr.py (double click or run from a command window)

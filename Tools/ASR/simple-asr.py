@@ -4,13 +4,20 @@ import SocketServer
 import json
 import re
 from speech_lib.speechkit import SpeechKit
+import asr_google
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(name)s: %(message)s',
                     )
 
+import httplib, urllib
+conn = httplib.HTTPConnection("ahclab08", 8000)
+headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+
+google_asr = asr_google.SpeechRecognition()
+
 class EchoRequestHandler(SocketServer.BaseRequestHandler):
-    
+
     def __init__(self, request, client_address, server):
         self.logger = logging.getLogger('EchoRequestHandler')
         self.logger.debug('__init__')
@@ -27,10 +34,9 @@ class EchoRequestHandler(SocketServer.BaseRequestHandler):
 
     def handle(self):
         self.logger.debug('handle')
-        
+
         # Echo the back to the client
         while 1:
-            
             data = None
             try:
                 data = self.request.recv(1024)
@@ -40,10 +46,12 @@ class EchoRequestHandler(SocketServer.BaseRequestHandler):
                 while not self.speech_kit.is_stop:
                     time.sleep(1)
                 return
-                
+
             self.logger.info('recv()->' +  data)
             if data == "start":
-                self.speech_kit = SpeechKit.initialize(ip="ws://163.221.94.22:11507/",
+
+                # Using our own asr
+                self.speech_kit = SpeechKit.initialize(ip="ws://ahcclp01:11507/",
                                       lang="en_tedtalk", listener=self, fullurl=None)
                 if not self.speech_kit:
                     print "Error, cannot initialize"
@@ -51,40 +59,47 @@ class EchoRequestHandler(SocketServer.BaseRequestHandler):
                     return
                 self.speech_kit.connect()
                 self.speech_kit.start()
+
+                # Using Google ASR
+                result = google_asr.recognize()
+                self.on_final(result)
             else:
                 self.logger.info("Stop ASR")
                 self.speech_kit.stop()
                 while not self.speech_kit.is_stop:
                     time.sleep(1)
                 # self.sendall("server:stopped")
-                
-                
+
+
                 # return
-            
+
     def on_partial(self, text):
         text = self.clean.sub("", text)
         if text:
             print " ".join(self.trans) + " " + text.lower()
 
     def on_final(self, text):
+        # text = self.clean.sub("", text).lower().replace(".", "").replace(" ", "%20")
         text = self.clean.sub("", text)
-        if text:
-            #q.put(text)
-            #self.trans.append(text)
-            print "final: ", text
-            try:
-                self.request.sendall(text)
-            except:
-                self.speech_kit.stop()
-                
-            #print " ".join(self.trans).upper()  
+        params = urllib.urlencode({'text': text})
+        conn.request("POST", "/KanjiConverter/default/convert", params, headers)
+        response = conn.getresponse()
+        text = response.read()
+        print "final: ", text
+        try:
+            self.request.sendall(text)
+        except:
+            self.speech_kit.stop()
+
+            #print " ".join(self.trans).upper()
 
     def finish(self):
         self.logger.debug('finish')
         return SocketServer.BaseRequestHandler.finish(self)
 
+
 class EchoServer(SocketServer.TCPServer):
-    
+
     def __init__(self, server_address, handler_class=EchoRequestHandler):
         self.logger = logging.getLogger('EchoServer')
         self.logger.debug('__init__')
@@ -127,11 +142,12 @@ class EchoServer(SocketServer.TCPServer):
         self.logger.debug('close_request(%s)', request_address)
         return SocketServer.TCPServer.close_request(self, request_address)
 
+
 if __name__ == '__main__':
     import socket
     import threading
 
-    address = ('localhost', 8888) # let the kernel give us a port
+    address = ('0.0.0.0', 8888) # let the kernel give us a port
     server = EchoServer(address, EchoRequestHandler)
     ip, port = server.server_address # find out what port we were given
     print "Serving on " + ip + " " + str(port)
